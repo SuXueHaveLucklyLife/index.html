@@ -119,6 +119,8 @@ textarea.form-control{resize:vertical;min-height:80px;line-height:1.6}
 .table-input td{border:1px solid var(--border);padding:4px}
 .table-input td input,.table-input td select{width:100%;padding:5px 8px;border:none;font-size:13px;background:transparent;font-family:var(--font);color:var(--text)}
 .table-input td input:focus,.table-input td select:focus{outline:none;background:var(--light-blue)}
+.table-input td textarea{width:100%;padding:6px 8px;border:none;font-size:13px;background:transparent;font-family:var(--font);color:var(--text);resize:vertical;line-height:1.6;white-space:pre-wrap;min-height:60px}
+.table-input td textarea:focus{outline:none;background:var(--light-blue)}
 .table-input tr:nth-child(even) td{background:#f8fafc}
 .row-del-btn{background:none;border:none;color:#cbd5e0;font-size:13px;cursor:pointer;padding:4px 6px;line-height:1}
 .row-del-btn:hover{color:var(--danger)}
@@ -588,7 +590,7 @@ function sb(){
     ${tf('src_other','其他來源：')}
   </div>`;
 }
-function tableInput(id, headers, rows, data={}, expandable=false){
+function tableInput(id, headers, rows, data={}, expandable=false, textareaCols=[]){
   const ths = headers.map(h=>`<th>${h}</th>`).join('') + (expandable?'<th style="width:36px"></th>':'');
   // determine how many rows actually exist (base rows + any extra saved rows)
   let rowCount = rows.length;
@@ -597,24 +599,36 @@ function tableInput(id, headers, rows, data={}, expandable=false){
     const savedCount = parseInt(data[extraKey]||'0',10);
     rowCount = Math.max(rows.length, savedCount);
   }
+  const escapeHtml = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const cellHTML = (key, val, placeholder, ci) => {
+    if(textareaCols.includes(ci)){
+      return `<td><textarea data-field="${key}" rows="3" placeholder="${placeholder}\n可用 - 或 1. 條列\n按 Enter 換行">${escapeHtml(val)}</textarea></td>`;
+    }
+    return `<td><input data-field="${key}" value="${escapeHtml(val)}" placeholder="${placeholder}"></td>`;
+  };
   let trs = '';
   for(let ri=0; ri<rowCount; ri++){
     const cols = rows[ri] || rows[0].map(()=>'');
     trs += `<tr data-table="${id}" data-row="${ri}">${cols.map((cell,ci)=>{
       const key=`${id}_r${ri}_c${ci}`;
-      return `<td><input data-field="${key}" value="${data[key]||''}" placeholder="${ri<rows.length?cell:''}"></td>`;
+      return cellHTML(key, data[key]||'', ri<rows.length?cell:'', ci);
     }).join('')}${expandable?`<td style="text-align:center;border:none;padding:0"><button type="button" class="row-del-btn" title="刪除此列" onclick="deleteTableRow('${id}',${ri})">✕</button></td>`:''}</tr>`;
   }
-  const addBtn = expandable?`<div style="margin-top:6px"><button type="button" class="btn" style="font-size:12px;padding:4px 12px" onclick="addTableRow('${id}',${headers.length})">+ 新增一列</button></div>`:'';
+  const addBtn = expandable?`<div style="margin-top:6px"><button type="button" class="btn" style="font-size:12px;padding:4px 12px" onclick="addTableRow('${id}',${headers.length},'${textareaCols.join(',')}')">+ 新增一列</button></div>`:'';
   return `<div style="overflow-x:auto;margin:8px 0" id="tablewrap_${id}"><table class="table-input"><thead><tr>${ths}</tr></thead><tbody id="tbody_${id}">${trs}</tbody></table></div>${addBtn}<input type="hidden" data-field="${id}_rowcount" value="${rowCount}">`;
 }
 
-function addTableRow(id, colCount){
+function addTableRow(id, colCount, textareaColsStr){
+  const textareaCols = (textareaColsStr||'').split(',').filter(s=>s!=='').map(Number);
   const tbody = document.getElementById('tbody_'+id);
   const ri = tbody.querySelectorAll('tr').length;
   let cells = '';
   for(let ci=0; ci<colCount; ci++){
-    cells += `<td><input data-field="${id}_r${ri}_c${ci}" value=""></td>`;
+    if(textareaCols.includes(ci)){
+      cells += `<td><textarea data-field="${id}_r${ri}_c${ci}" rows="3" placeholder="可用 - 或 1. 條列\n按 Enter 換行"></textarea></td>`;
+    } else {
+      cells += `<td><input data-field="${id}_r${ri}_c${ci}" value=""></td>`;
+    }
   }
   cells += `<td style="text-align:center;border:none;padding:0"><button type="button" class="row-del-btn" title="刪除此列" onclick="deleteTableRow('${id}',${ri})">✕</button></td>`;
   const tr = document.createElement('tr');
@@ -648,7 +662,7 @@ function renderC1(d){return `
   ${tf('intro_value','公司核心價值主張（為何客戶選它？）：',d.intro_value,'',2)}
   <div class="section-heading">收入來源拆解</div>
   ${tableInput('rev',['業務類別','收入佔比(%)','成長趨勢','備註'],
-    [['','','',''],['','','',''],['','','',''],['','','','']],d,true)}
+    [['','','',''],['','','',''],['','','',''],['','','','']],d,true,[3])}
   ${rb('這家公司真正靠什麼賺錢？主要收入來源未來是否穩定？')}
   ${sb()}`;}
 
