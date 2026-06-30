@@ -120,6 +120,8 @@ textarea.form-control{resize:vertical;min-height:80px;line-height:1.6}
 .table-input td input,.table-input td select{width:100%;padding:5px 8px;border:none;font-size:13px;background:transparent;font-family:var(--font);color:var(--text)}
 .table-input td input:focus,.table-input td select:focus{outline:none;background:var(--light-blue)}
 .table-input tr:nth-child(even) td{background:#f8fafc}
+.row-del-btn{background:none;border:none;color:#cbd5e0;font-size:13px;cursor:pointer;padding:4px 6px;line-height:1}
+.row-del-btn:hover{color:var(--danger)}
 
 /* Checkbox list */
 .check-list{list-style:none}
@@ -488,14 +490,20 @@ function chapterProgress(co){
   return CHAPTERS.filter(ch=>{
     const d = co.chapters[ch.id];
     if(!d) return false;
-    return Object.values(d).some(v=>typeof v==='string'?v.trim().length>0:(typeof v==='boolean'?v:false));
+    return Object.entries(d).some(([k,v])=>{
+      if(k.endsWith('_rowcount')) return false;
+      return typeof v==='string'?v.trim().length>0:(typeof v==='boolean'?v:false);
+    });
   }).length;
 }
 
 function isChapterDone(co, chId){
   if(!co.chapters||!co.chapters[chId]) return false;
   const d = co.chapters[chId];
-  return Object.values(d).some(v=>typeof v==='string'?v.trim().length>0:(typeof v==='boolean'?v:false));
+  return Object.entries(d).some(([k,v])=>{
+    if(k.endsWith('_rowcount')) return false;
+    return typeof v==='string'?v.trim().length>0:(typeof v==='boolean'?v:false);
+  });
 }
 
 function renderResearch(co){
@@ -580,13 +588,56 @@ function sb(){
     ${tf('src_other','其他來源：')}
   </div>`;
 }
-function tableInput(id, headers, rows, data={}){
-  const ths = headers.map(h=>`<th>${h}</th>`).join('');
-  const trs = rows.map((row,ri)=>`<tr>${row.map((cell,ci)=>{
-    const key=`${id}_r${ri}_c${ci}`;
-    return `<td><input data-field="${key}" value="${data[key]||''}" placeholder="${cell}"></td>`;
-  }).join('')}</tr>`).join('');
-  return `<div style="overflow-x:auto;margin:8px 0"><table class="table-input"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table></div>`;
+function tableInput(id, headers, rows, data={}, expandable=false){
+  const ths = headers.map(h=>`<th>${h}</th>`).join('') + (expandable?'<th style="width:36px"></th>':'');
+  // determine how many rows actually exist (base rows + any extra saved rows)
+  let rowCount = rows.length;
+  if(expandable){
+    const extraKey = `${id}_rowcount`;
+    const savedCount = parseInt(data[extraKey]||'0',10);
+    rowCount = Math.max(rows.length, savedCount);
+  }
+  let trs = '';
+  for(let ri=0; ri<rowCount; ri++){
+    const cols = rows[ri] || rows[0].map(()=>'');
+    trs += `<tr data-table="${id}" data-row="${ri}">${cols.map((cell,ci)=>{
+      const key=`${id}_r${ri}_c${ci}`;
+      return `<td><input data-field="${key}" value="${data[key]||''}" placeholder="${ri<rows.length?cell:''}"></td>`;
+    }).join('')}${expandable?`<td style="text-align:center;border:none;padding:0"><button type="button" class="row-del-btn" title="刪除此列" onclick="deleteTableRow('${id}',${ri})">✕</button></td>`:''}</tr>`;
+  }
+  const addBtn = expandable?`<div style="margin-top:6px"><button type="button" class="btn" style="font-size:12px;padding:4px 12px" onclick="addTableRow('${id}',${headers.length})">+ 新增一列</button></div>`:'';
+  return `<div style="overflow-x:auto;margin:8px 0" id="tablewrap_${id}"><table class="table-input"><thead><tr>${ths}</tr></thead><tbody id="tbody_${id}">${trs}</tbody></table></div>${addBtn}<input type="hidden" data-field="${id}_rowcount" value="${rowCount}">`;
+}
+
+function addTableRow(id, colCount){
+  const tbody = document.getElementById('tbody_'+id);
+  const ri = tbody.querySelectorAll('tr').length;
+  let cells = '';
+  for(let ci=0; ci<colCount; ci++){
+    cells += `<td><input data-field="${id}_r${ri}_c${ci}" value=""></td>`;
+  }
+  cells += `<td style="text-align:center;border:none;padding:0"><button type="button" class="row-del-btn" title="刪除此列" onclick="deleteTableRow('${id}',${ri})">✕</button></td>`;
+  const tr = document.createElement('tr');
+  tr.dataset.table = id;
+  tr.dataset.row = ri;
+  tr.innerHTML = cells;
+  tbody.appendChild(tr);
+  const hiddenField = document.querySelector(`[data-field="${id}_rowcount"]`);
+  if(hiddenField) hiddenField.value = ri+1;
+  tr.querySelectorAll('[data-field]').forEach(el=>{
+    el.addEventListener('change', ()=>autoSave(db.companies.find(c=>c.id===currentCompanyId)));
+    el.addEventListener('input', ()=>autoSave(db.companies.find(c=>c.id===currentCompanyId)));
+  });
+  autoSave(db.companies.find(c=>c.id===currentCompanyId));
+}
+
+function deleteTableRow(id, ri){
+  const tbody = document.getElementById('tbody_'+id);
+  const row = tbody.querySelector(`tr[data-row="${ri}"]`);
+  if(row) row.remove();
+  const hiddenField = document.querySelector(`[data-field="${id}_rowcount"]`);
+  if(hiddenField) hiddenField.value = tbody.querySelectorAll('tr').length;
+  autoSave(db.companies.find(c=>c.id===currentCompanyId));
 }
 
 function renderC1(d){return `
@@ -597,7 +648,7 @@ function renderC1(d){return `
   ${tf('intro_value','公司核心價值主張（為何客戶選它？）：',d.intro_value,'',2)}
   <div class="section-heading">收入來源拆解</div>
   ${tableInput('rev',['業務類別','收入佔比(%)','成長趨勢','備註'],
-    [['','','',''],['','','',''],['','','',''],['','','','']],d)}
+    [['','','',''],['','','',''],['','','',''],['','','','']],d,true)}
   ${rb('這家公司真正靠什麼賺錢？主要收入來源未來是否穩定？')}
   ${sb()}`;}
 
