@@ -13,46 +13,44 @@
   --border:#CBD5E0;--radius:8px;--font:'Segoe UI',system-ui,-apple-system,sans-serif;
 }
 body{font-family:var(--font);color:var(--text);background:#F0F4F8;min-height:100vh}
-
-/* Layout */
 #app{display:flex;min-height:100vh}
-#sidebar{width:260px;background:var(--navy);color:#fff;display:flex;flex-direction:column;position:fixed;height:100vh;overflow-y:auto;z-index:100;transition:transform .3s}
+#sidebar{width:260px;background:var(--navy);color:#fff;display:flex;flex-direction:column;position:fixed;height:100vh;overflow-y:auto;z-index:100}
 #main{margin-left:260px;flex:1;min-height:100vh}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
+#menu-btn{display:none;background:none;border:none;cursor:pointer;padding:6px;color:var(--navy);font-size:20px;line-height:1}
+@media(max-width:680px){
+  #sidebar{transform:translateX(-100%);transition:transform .25s;z-index:100}
+  #sidebar.open{transform:translateX(0)}
+  #overlay.open{display:block}
+  #main{margin-left:0}
+  #menu-btn{display:flex;align-items:center}
+  .topbar-actions .btn:not(.btn-primary){display:none}
+}
 .sidebar-header{padding:20px 16px 12px;border-bottom:1px solid rgba(255,255,255,.1)}
-.sidebar-header h1{font-size:14px;font-weight:700;letter-spacing:.5px;color:#fff}
+.sidebar-header h1{font-size:14px;font-weight:700;color:#fff}
 .sidebar-header p{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
 .sidebar-section{padding:8px 0}
 .sidebar-section-label{font-size:10px;font-weight:600;letter-spacing:1px;color:rgba(255,255,255,.4);padding:8px 16px 4px;text-transform:uppercase}
 .sidebar-item{display:flex;align-items:center;gap:8px;padding:7px 16px;cursor:pointer;font-size:13px;color:rgba(255,255,255,.75);border-left:3px solid transparent;transition:all .15s}
 .sidebar-item:hover{background:rgba(255,255,255,.08);color:#fff}
 .sidebar-item.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:var(--accent)}
-.sidebar-item .badge{margin-left:auto;background:rgba(255,255,255,.15);border-radius:10px;font-size:10px;padding:1px 7px}
-
-/* Topbar */
 #topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 #topbar h2{font-size:16px;font-weight:600;color:var(--navy)}
 .topbar-actions{display:flex;gap:8px}
 .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--dark-gray);transition:all .15s}
-.btn:hover{background:var(--light-gray);border-color:#a0aec0}
+.btn:hover{background:var(--light-gray)}
 .btn-primary{background:var(--navy);color:#fff;border-color:var(--navy)}
 .btn-primary:hover{background:#162d52}
 .btn-accent{background:var(--accent);color:#fff;border-color:var(--accent)}
 .btn-danger{background:var(--danger-bg);color:var(--danger);border-color:#FEB2B2}
-
-/* Page content */
 #page{padding:24px;max-width:960px}
-
-/* Dashboard cards */
 .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
 .stat-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
 .stat-card .num{font-size:28px;font-weight:700;color:var(--navy)}
 .stat-card .lbl{font-size:12px;color:var(--dark-gray);margin-top:4px}
-
-/* Company cards */
 .company-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.company-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px;cursor:pointer;transition:all .2s;position:relative}
+.company-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px;cursor:pointer;transition:all .2s}
 .company-card:hover{border-color:var(--blue);box-shadow:0 4px 12px rgba(46,95,163,.1)}
-.company-card .co-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
 .co-name{font-size:15px;font-weight:700;color:var(--navy)}
 .co-code{font-size:12px;color:var(--dark-gray);margin-top:2px}
 .tag{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:2px 8px;border-radius:12px;background:var(--light-blue);color:var(--navy)}
@@ -61,115 +59,94 @@ body{font-family:var(--font);color:var(--text);background:#F0F4F8;min-height:100
 .tag.difficulty-low{background:#F0FFF4;color:var(--success)}
 .tag.difficulty-mid{background:#FFFBF0;color:#744210}
 .tag.difficulty-high{background:#FFF5F5;color:var(--danger)}
-.co-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.co-tags{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}
 .progress-bar{height:6px;background:var(--mid-gray);border-radius:3px;overflow:hidden}
 .progress-fill{height:100%;background:var(--blue);border-radius:3px;transition:width .4s}
 .progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--dark-gray);margin-top:4px}
-.co-meta{font-size:11px;color:var(--dark-gray);margin-top:8px}
-
-/* Filters */
-.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;align-items:center}
-.filter-select{padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:#fff;color:var(--text);cursor:pointer}
-.search-input{padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:#fff;min-width:200px}
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.filter-select{padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:#fff}
+.search-input{padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;min-width:200px}
 .search-input:focus{outline:none;border-color:var(--blue)}
-
-/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
 .modal{background:#fff;border-radius:12px;width:100%;max-width:600px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden}
 .modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .modal-header h3{font-size:17px;font-weight:700;color:var(--navy)}
 .modal-body{overflow-y:auto;padding:24px;flex:1}
 .modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0}
-.close-btn{background:none;border:none;font-size:20px;cursor:pointer;color:var(--dark-gray);line-height:1;padding:4px}
-.close-btn:hover{color:var(--text)}
-
-/* Form */
+.close-btn{background:none;border:none;font-size:20px;cursor:pointer;color:var(--dark-gray);padding:4px}
 .form-group{margin-bottom:16px}
 .form-group label{display:block;font-size:13px;font-weight:600;color:var(--dark-gray);margin-bottom:6px}
 .form-control{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:var(--font);color:var(--text)}
 .form-control:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,95,163,.1)}
-textarea.form-control{resize:vertical;min-height:80px;line-height:1.6}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form-hint{font-size:11px;color:var(--dark-gray);margin-top:4px}
-
-/* Research form */
 .chapter-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;padding:16px;background:#fff;border:1px solid var(--border);border-radius:10px}
 .ch-btn{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--dark-gray);transition:all .15s}
 .ch-btn:hover{border-color:var(--blue);color:var(--blue)}
 .ch-btn.done{background:var(--success-bg);border-color:#9AE6B4;color:var(--success)}
 .ch-btn.active{background:var(--navy);border-color:var(--navy);color:#fff}
-
 .chapter-card{background:#fff;border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden}
 .chapter-title{padding:16px 20px;background:var(--navy);color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px}
-.chapter-title .ch-check{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
-.chapter-title .ch-check.done{background:rgba(255,255,255,.9);border-color:transparent;color:var(--navy)}
+.ch-check{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.ch-check.done{background:rgba(255,255,255,.9);border-color:transparent;color:var(--navy)}
 .chapter-body{padding:20px}
-
 .section-heading{font-size:13px;font-weight:700;color:var(--blue);margin:16px 0 8px;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--light-blue);padding-bottom:4px}
-
-/* Research boxes */
 .research-box{background:#EBF8FF;border:1px solid #BEE3F8;border-left:4px solid var(--blue);border-radius:var(--radius);padding:16px;margin-top:16px}
 .research-box .rb-title{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
 .source-box{background:#FFFBF0;border:1px solid #FAD089;border-left:4px solid var(--accent);border-radius:var(--radius);padding:16px;margin-top:12px}
 .source-box .rb-title{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
 
-/* Table input */
-.table-input{width:100%;border-collapse:collapse;font-size:13px}
-.table-input th{background:var(--mid-blue);color:var(--navy);font-weight:600;padding:8px 10px;text-align:left;border:1px solid var(--border)}
-.table-input td{border:1px solid var(--border);padding:4px}
-.table-input td input,.table-input td select{width:100%;padding:5px 8px;border:none;font-size:13px;background:transparent;font-family:var(--font);color:var(--text)}
-.table-input td input:focus,.table-input td select:focus{outline:none;background:var(--light-blue)}
-.table-input td textarea{width:100%;padding:6px 8px;border:none;font-size:13px;background:transparent;font-family:var(--font);color:var(--text);resize:vertical;line-height:1.6;white-space:pre-wrap;min-height:60px}
-.table-input td textarea:focus{outline:none;background:var(--light-blue)}
-.table-input tr:nth-child(even) td{background:#f8fafc}
-.row-del-btn{background:none;border:none;color:#cbd5e0;font-size:13px;cursor:pointer;padding:4px 6px;line-height:1}
-.row-del-btn:hover{color:var(--danger)}
+/* ── RICH TEXT EDITOR ── */
+.rte-wrap{margin-bottom:16px}
+.rte-label{display:block;font-size:13px;font-weight:600;color:var(--dark-gray);margin-bottom:4px}
+.rte-toolbar{display:flex;gap:2px;padding:4px 6px;background:var(--light-gray);border:1px solid var(--border);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0}
+.rte-toolbar button{background:none;border:1px solid transparent;border-radius:4px;padding:2px 7px;font-size:12px;cursor:pointer;color:var(--dark-gray);font-family:var(--font);line-height:1.6}
+.rte-toolbar button:hover{background:#fff;border-color:var(--border)}
+.rte-toolbar button.active{background:#fff;border-color:var(--blue);color:var(--blue)}
+.rte-toolbar .sep{width:1px;background:var(--border);margin:2px 4px}
+.rte-editor{min-height:36px;padding:8px 12px;border:1px solid var(--border);border-radius:0 0 var(--radius) var(--radius);font-size:14px;font-family:var(--font);color:var(--text);background:#fff;outline:none;line-height:1.7;word-break:break-word}
+.rte-editor:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,95,163,.1)}
+.rte-editor:empty:before{content:attr(data-placeholder);color:#a0aec0;pointer-events:none}
+.rte-editor ul{padding-left:1.4em;list-style:disc}
+.rte-editor ol{padding-left:1.4em;list-style:decimal}
+.rte-editor li{margin:2px 0}
+.rte-editor strong{font-weight:700}
+.rte-editor em{font-style:italic}
+.rte-editor p{margin:0;min-height:1.4em}
 
-/* Checkbox list */
+/* ── TABLE INPUT ── */
+.table-wrap{overflow-x:auto;margin:8px 0}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--mid-blue);color:var(--navy);font-weight:600;padding:8px 10px;text-align:left;border:1px solid var(--border)}
+.tbl td{border:1px solid var(--border);vertical-align:top;padding:0}
+.tbl tr:nth-child(even) td{background:#f8fafc}
+.tbl-cell{min-height:34px;padding:6px 8px;font-size:13px;font-family:var(--font);color:var(--text);outline:none;line-height:1.6;word-break:break-word;white-space:pre-wrap}
+.tbl-cell:focus{background:var(--light-blue)}
+.tbl-cell:empty:before{content:attr(data-ph);color:#a0aec0;pointer-events:none;font-style:italic}
+.tbl-cell ul{padding-left:1.2em;list-style:disc}
+.tbl-cell ol{padding-left:1.2em;list-style:decimal}
+.tbl-cell strong{font-weight:700}
+.tbl-cell em{font-style:italic}
+.row-del-btn{background:none;border:none;color:#cbd5e0;font-size:13px;cursor:pointer;padding:6px;line-height:1;width:100%;height:100%}
+.row-del-btn:hover{color:var(--danger)}
+.add-row-btn{margin-top:6px;font-size:12px;padding:4px 12px}
+
+/* check list */
 .check-list{list-style:none}
 .check-list li{display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid var(--mid-gray);font-size:13px;color:var(--dark-gray)}
 .check-list li:last-child{border-bottom:none}
 .check-list li input[type=checkbox]{margin-top:2px;accent-color:var(--blue);width:15px;height:15px;flex-shrink:0;cursor:pointer}
 
-/* Progress overview */
-.chapter-progress{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:16px}
-.ch-progress-item{background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
-.ch-progress-item .ch-num{font-size:11px;color:var(--dark-gray)}
-.ch-progress-item .ch-name{font-size:12px;font-weight:600;color:var(--navy);margin:4px 0}
-.ch-progress-item .ch-status{font-size:11px}
-.ch-status.done{color:var(--success)}
-.ch-status.partial{color:#744210}
-.ch-status.empty{color:var(--dark-gray)}
-
-/* Toast */
-#toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
-#toast.show{opacity:1}
-
-/* Empty state */
 .empty-state{text-align:center;padding:60px 20px;color:var(--dark-gray)}
 .empty-state .es-icon{font-size:48px;margin-bottom:12px}
 .empty-state h3{font-size:18px;font-weight:600;color:var(--navy);margin-bottom:8px}
-.empty-state p{font-size:14px;line-height:1.6}
-
-/* Divider */
-.divider{height:1px;background:var(--mid-gray);margin:20px 0}
-
-@media(max-width:700px){
-  #sidebar{transform:translateX(-100%)}
-  #sidebar.open{transform:translateX(0)}
-  #main{margin-left:0}
-  .form-row{grid-template-columns:1fr}
-  .company-grid{grid-template-columns:1fr}
-}
+#toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+#toast.show{opacity:1}
 </style>
 </head>
 <body>
 <div id="app">
   <nav id="sidebar">
-    <div class="sidebar-header">
-      <h1>📊 研究手冊</h1>
-      <p>Equity Research Workbook</p>
-    </div>
+    <div class="sidebar-header"><h1>📊 研究手冊</h1><p>Equity Research Workbook</p></div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">主選單</div>
       <div class="sidebar-item active" data-page="dashboard">🏠 總覽儀表板</div>
@@ -199,69 +176,51 @@ textarea.form-control{resize:vertical;min-height:80px;line-height:1.6}
       <button class="btn btn-accent" onclick="showModal('addCompany')" style="width:100%;justify-content:center">+ 新增公司</button>
     </div>
   </nav>
-
+  <div id="overlay" onclick="closeSidebar()"></div>
   <div id="main">
     <div id="topbar">
-      <h2 id="page-title">總覽儀表板</h2>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button id="menu-btn" onclick="toggleSidebar()">☰</button>
+        <h2 id="page-title">總覽儀表板</h2>
+      </div>
       <div class="topbar-actions">
         <button class="btn" onclick="exportData()">⬇ 匯出備份</button>
         <button class="btn btn-primary" onclick="showModal('addCompany')">+ 新增公司</button>
       </div>
     </div>
-    <div id="page"></div>
+    <div id="page"><div style="padding:60px;text-align:center;color:var(--dark-gray)"><div style="font-size:32px;margin-bottom:12px">⏳</div><div>正在從雲端載入資料…</div></div></div>
   </div>
 </div>
 
-<!-- Add Company Modal -->
+<!-- Modals -->
 <div id="modal-addCompany" class="modal-overlay" style="display:none">
   <div class="modal">
-    <div class="modal-header">
-      <h3>新增研究公司</h3>
-      <button class="close-btn" onclick="closeModal('addCompany')">✕</button>
-    </div>
+    <div class="modal-header"><h3>新增研究公司</h3><button class="close-btn" onclick="closeModal('addCompany')">✕</button></div>
     <div class="modal-body">
       <div class="form-row">
-        <div class="form-group">
-          <label>公司名稱 *</label>
-          <input class="form-control" id="new-name" placeholder="例：台積電">
-        </div>
-        <div class="form-group">
-          <label>股票代號</label>
-          <input class="form-control" id="new-code" placeholder="例：2330">
-        </div>
+        <div class="form-group"><label>公司名稱 *</label><input class="form-control" id="new-name" placeholder="例：台積電"></div>
+        <div class="form-group"><label>股票代號</label><input class="form-control" id="new-code" placeholder="例：2330"></div>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label>產業別</label>
+        <div class="form-group"><label>產業別</label>
           <select class="form-control" id="new-industry">
             <option>半導體</option><option>電子代工</option><option>金融</option>
-            <option>消費</option><option>電信</option><option>原物料</option>
-            <option>航運</option><option>其他</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>研究難度</label>
+            <option>消費</option><option>電信</option><option>原物料</option><option>航運</option><option>其他</option>
+          </select></div>
+        <div class="form-group"><label>研究難度</label>
           <select class="form-control" id="new-difficulty">
-            <option value="low">低（適合入門）</option>
-            <option value="mid" selected>中</option>
-            <option value="high">中高</option>
-          </select>
-        </div>
+            <option value="low">低</option><option value="mid" selected>中</option><option value="high">中高</option>
+          </select></div>
       </div>
-      <div class="form-group">
-        <label>目前所屬階段（依系主任學習地圖）</label>
+      <div class="form-group"><label>所屬階段</label>
         <select class="form-control" id="new-stage">
           <option value="1">第一階段 — 公司與產業基礎</option>
           <option value="2">第二階段 — 財報與企業價值</option>
           <option value="3">第三階段 — 報酬風險與統計</option>
           <option value="4">第四階段 — 產業與總體環境</option>
           <option value="5">第五階段 — 投資判斷整合</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>簡要說明（選填）</label>
-        <textarea class="form-control" id="new-desc" placeholder="一句話說明這家公司主要業務…"></textarea>
-      </div>
+        </select></div>
+      <div class="form-group"><label>簡要說明（選填）</label><textarea class="form-control" id="new-desc" placeholder="一句話說明主要業務…"></textarea></div>
     </div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('addCompany')">取消</button>
@@ -270,38 +229,58 @@ textarea.form-control{resize:vertical;min-height:80px;line-height:1.6}
   </div>
 </div>
 
-<!-- Delete Confirm Modal -->
 <div id="modal-deleteConfirm" class="modal-overlay" style="display:none">
   <div class="modal" style="max-width:400px">
-    <div class="modal-header">
-      <h3>確認刪除</h3>
-      <button class="close-btn" onclick="closeModal('deleteConfirm')">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="font-size:14px;line-height:1.7">確定要刪除 <strong id="delete-company-name"></strong> 的研究檔案嗎？此操作無法復原，所有填寫資料將永久消失。</p>
-    </div>
+    <div class="modal-header"><h3>確認刪除</h3><button class="close-btn" onclick="closeModal('deleteConfirm')">✕</button></div>
+    <div class="modal-body"><p style="font-size:14px;line-height:1.7">確定要刪除 <strong id="delete-company-name"></strong> 的研究檔案嗎？此操作無法復原。</p></div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('deleteConfirm')">取消</button>
       <button class="btn btn-danger" id="confirm-delete-btn">確認刪除</button>
     </div>
   </div>
 </div>
-
-<div id="toast">已儲存</div>
+<div id="toast"></div>
 
 <script>
-// ── DATA ────────────────────────────────────────────────
-const STORAGE_KEY = 'equity_research_db';
-const CHAPTERS = [
-  {id:'c1', title:'一、公司基本資料與定位'},
-  {id:'c2', title:'二、商業模式與價值鏈分析'},
-  {id:'c3', title:'三、管理層分析與資本配置'},
-  {id:'c4', title:'四、護城河與競爭優勢'},
-  {id:'c5', title:'五、產業分析與市場結構'},
-  {id:'c6', title:'六、經濟學專題思考'},
-  {id:'c7', title:'七、總體經濟與景氣循環'},
-  {id:'c8', title:'八、財務報表分析'},
-  {id:'c9', title:'九、財報品質分析'},
+// ── SUPABASE ────────────────────────────────────────────
+const SUPABASE_URL='https://vyaspotauebgkymdgiyx.supabase.co';
+const SUPABASE_KEY='sb_publishable_9uxCNxnLtLSnfsSGdmUwQQ_2Wa5XlEh';
+const STORAGE_KEY='equity_research_db';
+const ROW_ID=1;
+
+async function loadFromCloud(){
+  try{
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/research_data?id=eq.${ROW_ID}&select=data`,
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    const rows=await res.json();
+    if(rows&&rows.length>0&&rows[0].data) return JSON.parse(rows[0].data);
+  }catch(e){console.warn('雲端載入失敗',e);}
+  return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{"companies":[]}');
+}
+async function saveToCloud(data){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+  try{
+    await fetch(`${SUPABASE_URL}/rest/v1/research_data`,{
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,
+        'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({id:ROW_ID,data:JSON.stringify(data)})
+    });
+  }catch(e){console.warn('雲端儲存失敗',e);}
+}
+function save(data){saveToCloud(data);}
+
+// ── CHAPTERS ────────────────────────────────────────────
+const CHAPTERS=[
+  {id:'c1',title:'一、公司基本資料與定位'},
+  {id:'c2',title:'二、商業模式與價值鏈分析'},
+  {id:'c3',title:'三、管理層分析與資本配置'},
+  {id:'c4',title:'四、護城河與競爭優勢'},
+  {id:'c5',title:'五、產業分析與市場結構'},
+  {id:'c6',title:'六、經濟學專題思考'},
+  {id:'c7',title:'七、總體經濟與景氣循環'},
+  {id:'c8',title:'八、財務報表分析'},
+  {id:'c9',title:'九、財報品質分析'},
   {id:'c10',title:'十、同業比較分析'},
   {id:'c11',title:'十一、估值分析與股東結構'},
   {id:'c12',title:'十二、風險分析'},
@@ -309,625 +288,602 @@ const CHAPTERS = [
   {id:'c14',title:'十四、投資論文與決策'},
 ];
 
-function load(){return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{"companies":[]}');}
-function save(db){localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}
-
 // ── STATE ───────────────────────────────────────────────
-let db = load();
-let currentPage = 'dashboard';
-let currentCompanyId = null;
-let activeChapter = 'c1';
-let filterIndustry = '';
-let filterStage = '';
-let deleteTargetId = null;
+let db={companies:[]};
+let currentPage='dashboard',currentCompanyId=null,activeChapter='c1';
+let filterIndustry='',filterStage='';
 
-// ── ROUTING ─────────────────────────────────────────────
-function navigate(page, opts={}){
-  currentPage = page;
-  if(opts.companyId) currentCompanyId = opts.companyId;
-  if(opts.chapter) activeChapter = opts.chapter;
-  if(opts.industry !== undefined) filterIndustry = opts.industry;
-  if(opts.stage !== undefined) filterStage = opts.stage;
-  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
-  if(page === 'dashboard') document.querySelector('[data-page="dashboard"]').classList.add('active');
-  if(page === 'companies') document.querySelector('[data-page="companies"]').classList.add('active');
-  if(page === 'progress') document.querySelector('[data-page="progress"]').classList.add('active');
-  render();
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
 }
 
-document.querySelectorAll('.sidebar-item').forEach(el => {
-  el.addEventListener('click', ()=>{
-    const p = el.dataset.page;
-    const ind = el.dataset.filterIndustry||'';
-    const st = el.dataset.filterStage||'';
-    navigate(p, {industry: ind, stage: st});
-  });
+// ── ROUTING ─────────────────────────────────────────────
+function navigate(page,opts={}){
+  currentPage=page;
+  if(opts.companyId)currentCompanyId=opts.companyId;
+  if(opts.chapter)activeChapter=opts.chapter;
+  if(opts.industry!==undefined)filterIndustry=opts.industry;
+  if(opts.stage!==undefined)filterStage=opts.stage;
+  document.querySelectorAll('.sidebar-item').forEach(el=>el.classList.remove('active'));
+  const sel=page==='dashboard'?'[data-page="dashboard"]':page==='progress'?'[data-page="progress"]':'[data-page="companies"]';
+  document.querySelector(sel)?.classList.add('active');
+  render();
+}
+document.querySelectorAll('.sidebar-item').forEach(el=>el.addEventListener('click',()=>{
+  navigate(el.dataset.page,{industry:el.dataset.filterIndustry||'',stage:el.dataset.filterStage||''});
+  closeSidebar();
+}));
+
+// ── RICH TEXT EDITOR ────────────────────────────────────
+function rte(fieldId,placeholder,savedHTML=''){
+  const tid=`tb_${fieldId}`;
+  const eid=`ed_${fieldId}`;
+  return `<div class="rte-wrap">
+    <div class="rte-toolbar" id="${tid}">
+      <button onmousedown="event.preventDefault();fmt('bold')" title="粗體 Ctrl+B"><b>B</b></button>
+      <button onmousedown="event.preventDefault();fmt('italic')" title="斜體 Ctrl+I"><i>I</i></button>
+      <div class="sep"></div>
+      <button onmousedown="event.preventDefault();fmtList('ul')" title="無序清單">• 清單</button>
+      <button onmousedown="event.preventDefault();fmtList('ol')" title="有序清單">1. 清單</button>
+    </div>
+    <div class="rte-editor" id="${eid}" contenteditable="true"
+      data-field="${fieldId}" data-placeholder="${placeholder}"
+      onfocus="updateToolbar(this)"
+      onkeyup="updateToolbar(this)"
+      onmouseup="updateToolbar(this)"
+    >${savedHTML}</div>
+  </div>`;
+}
+
+function fmt(cmd){document.execCommand(cmd,false,null);}
+function fmtList(type){
+  const cmd=type==='ul'?'insertUnorderedList':'insertOrderedList';
+  document.execCommand(cmd,false,null);
+}
+function updateToolbar(el){
+  const tb=el.closest('.rte-wrap')?.querySelector('.rte-toolbar');
+  if(!tb)return;
+  tb.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  if(document.queryCommandState('bold'))tb.querySelector('button:nth-child(1)')?.classList.add('active');
+  if(document.queryCommandState('italic'))tb.querySelector('button:nth-child(2)')?.classList.add('active');
+}
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='b'){e.preventDefault();fmt('bold');}
+  if((e.ctrlKey||e.metaKey)&&e.key==='i'){e.preventDefault();fmt('italic');}
 });
+
+// ── TABLE INPUT ─────────────────────────────────────────
+// textareaCols: array of col indices that use RTE instead of plain div
+function tblInput(id,headers,defaultRows,data={},expandable=false,rteCols=[]){
+  const savedCount=parseInt(data[`${id}__rc`]||'0',10);
+  const rowCount=expandable?Math.max(defaultRows.length,savedCount):defaultRows.length;
+  const delCol=expandable?'<th style="width:32px"></th>':'';
+  const ths=headers.map(h=>`<th>${h}</th>`).join('')+delCol;
+
+  let trs='';
+  for(let ri=0;ri<rowCount;ri++){
+    const defaults=defaultRows[ri]||defaultRows[0].map(()=>'');
+    const tds=defaults.map((ph,ci)=>{
+      const key=`${id}__${ri}_${ci}`;
+      const val=data[key]||'';
+      if(rteCols.includes(ci)){
+        // RTE cell
+        return `<td><div class="tbl-cell rte-editor" contenteditable="true"
+          data-field="${key}" data-placeholder="${ph}"
+          onfocus="updateToolbar(this)" onkeyup="updateToolbar(this)" onmouseup="updateToolbar(this)"
+        >${val}</div></td>`;
+      }
+      return `<td><div class="tbl-cell" contenteditable="true"
+        data-field="${key}" data-ph="${ph}"
+        suppressContentEditableWarning="true"
+      >${val}</div></td>`;
+    }).join('');
+    const delTd=expandable?`<td style="text-align:center"><button class="row-del-btn" onmousedown="event.preventDefault();delRow('${id}',this)">✕</button></td>`:'';
+    trs+=`<tr>${tds}${delTd}</tr>`;
+  }
+  const addBtn=expandable?`<button class="btn add-row-btn" onmousedown="event.preventDefault();addRow('${id}',${JSON.stringify(defaultRows[0])},${JSON.stringify(rteCols)})">+ 新增一列</button>`:'';
+  return `<div class="table-wrap"><table class="tbl" id="tbl_${id}">
+    <thead><tr>${ths}</tr></thead>
+    <tbody id="tbody_${id}">${trs}</tbody>
+  </table></div>
+  ${addBtn}
+  <input type="hidden" data-field="${id}__rc" value="${rowCount}">`;
+}
+
+function addRow(id,defaultCols,rteCols){
+  const tbody=document.getElementById('tbody_'+id);
+  const ri=tbody.querySelectorAll('tr').length;
+  const tr=document.createElement('tr');
+  let tds=defaultCols.map((ph,ci)=>{
+    const key=`${id}__${ri}_${ci}`;
+    if(rteCols.includes(ci)){
+      return `<td><div class="tbl-cell rte-editor" contenteditable="true"
+        data-field="${key}" data-placeholder="${ph}"
+        onfocus="updateToolbar(this)" onkeyup="updateToolbar(this)" onmouseup="updateToolbar(this)"
+      ></div></td>`;
+    }
+    return `<td><div class="tbl-cell" contenteditable="true" data-field="${key}" data-ph="${ph}"></div></td>`;
+  }).join('');
+  tds+=`<td style="text-align:center"><button class="row-del-btn" onmousedown="event.preventDefault();delRow('${id}',this)">✕</button></td>`;
+  tr.innerHTML=tds;
+  tbody.appendChild(tr);
+  const rc=document.querySelector(`[data-field="${id}__rc"]`);
+  if(rc)rc.value=ri+1;
+  bindEditorEvents(tr);
+  triggerSave();
+}
+function delRow(id,btn){
+  btn.closest('tr').remove();
+  const tbody=document.getElementById('tbody_'+id);
+  const rc=document.querySelector(`[data-field="${id}__rc"]`);
+  if(rc)rc.value=tbody.querySelectorAll('tr').length;
+  triggerSave();
+}
+
+// ── SAVE / COLLECT ──────────────────────────────────────
+function collectData(){
+  const co=db.companies.find(c=>c.id===currentCompanyId);
+  if(!co)return;
+  if(!co.chapters)co.chapters={};
+  if(!co.chapters[activeChapter])co.chapters[activeChapter]={};
+  document.querySelectorAll('[data-field]').forEach(el=>{
+    const k=el.dataset.field;
+    if(el.type==='checkbox') co.chapters[activeChapter][k]=el.checked;
+    else if(el.type==='hidden') co.chapters[activeChapter][k]=el.value;
+    else co.chapters[activeChapter][k]=el.innerHTML;
+  });
+}
+let saveTimer=null;
+function triggerSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{collectData();save(db);},800);
+}
+function saveChapter(){collectData();save(db);showToast('已儲存 ✓');}
+
+function bindEditorEvents(root){
+  (root||document).querySelectorAll('[contenteditable],[data-field]').forEach(el=>{
+    if(el.getAttribute('contenteditable')||el.type==='checkbox'||el.type==='hidden'){
+      el.addEventListener('input',triggerSave);
+      el.addEventListener('change',triggerSave);
+    }
+  });
+}
+
+// ── CHAPTER HELPERS ─────────────────────────────────────
+function chapterHasData(co,chId){
+  const d=co.chapters?.[chId];
+  if(!d)return false;
+  return Object.entries(d).some(([k,v])=>{
+    if(k.endsWith('__rc'))return false;
+    if(typeof v==='boolean')return v;
+    const text=(v||'').replace(/<[^>]*>/g,'').trim();
+    return text.length>0;
+  });
+}
+function chapterProgress(co){return CHAPTERS.filter(ch=>chapterHasData(co,ch.id)).length;}
 
 // ── RENDER ──────────────────────────────────────────────
 function render(){
-  const page = document.getElementById('page');
-  const title = document.getElementById('page-title');
-  if(currentPage==='dashboard'){title.textContent='總覽儀表板'; page.innerHTML = renderDashboard();}
-  else if(currentPage==='companies'){title.textContent='所有公司'; page.innerHTML = renderCompanies();}
-  else if(currentPage==='progress'){title.textContent='研究進度'; page.innerHTML = renderProgress();}
+  const page=document.getElementById('page');
+  const title=document.getElementById('page-title');
+  if(currentPage==='dashboard'){title.textContent='總覽儀表板';page.innerHTML=renderDashboard();}
+  else if(currentPage==='companies'){title.textContent='所有公司';page.innerHTML=renderCompanies();}
+  else if(currentPage==='progress'){title.textContent='研究進度';page.innerHTML=renderProgress();}
   else if(currentPage==='research'){
-    const co = db.companies.find(c=>c.id===currentCompanyId);
-    title.textContent = co ? co.name+' — 研究手冊' : '研究手冊';
-    page.innerHTML = renderResearch(co);
-    bindResearchEvents(co);
+    const co=db.companies.find(c=>c.id===currentCompanyId);
+    title.textContent=co?co.name+' — 研究手冊':'研究手冊';
+    page.innerHTML=renderResearch(co);
+    bindEditorEvents();
   }
 }
 
 // ── DASHBOARD ───────────────────────────────────────────
 function renderDashboard(){
-  const cos = db.companies;
-  const total = cos.length;
-  const done = cos.filter(c=>chapterProgress(c)===14).length;
-  const inProgress = cos.filter(c=>{const p=chapterProgress(c); return p>0&&p<14;}).length;
-  const industries = [...new Set(cos.map(c=>c.industry))].length;
-
-  const recentCards = cos.slice().reverse().slice(0,3).map(c=>`
-    <div class="company-card" onclick="navigate('research',{companyId:'${c.id}',chapter:'c1'})">
-      <div class="co-header">
-        <div><div class="co-name">${c.name}</div><div class="co-code">${c.code||'—'}</div></div>
-        <span class="tag industry">${c.industry}</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(chapterProgress(c)/14*100)}%"></div></div>
-      <div class="progress-label"><span>第${c.stage}階段</span><span>${chapterProgress(c)}/14 章</span></div>
-    </div>`).join('');
-
-  return `<div id="page" style="padding:24px">
+  const cos=db.companies;
+  const done=cos.filter(c=>chapterProgress(c)===14).length;
+  const inp=cos.filter(c=>{const p=chapterProgress(c);return p>0&&p<14;}).length;
+  const ind=[...new Set(cos.map(c=>c.industry))].length;
+  const cards=cos.slice().reverse().slice(0,3).map(coCard).join('');
+  return `<div style="padding:24px">
     <div class="stat-grid">
-      <div class="stat-card"><div class="num">${total}</div><div class="lbl">研究公司總數</div></div>
-      <div class="stat-card"><div class="num">${inProgress}</div><div class="lbl">進行中</div></div>
+      <div class="stat-card"><div class="num">${cos.length}</div><div class="lbl">研究公司總數</div></div>
+      <div class="stat-card"><div class="num">${inp}</div><div class="lbl">進行中</div></div>
       <div class="stat-card"><div class="num">${done}</div><div class="lbl">已完成研究</div></div>
-      <div class="stat-card"><div class="num">${industries}</div><div class="lbl">涵蓋產業數</div></div>
+      <div class="stat-card"><div class="num">${ind}</div><div class="lbl">涵蓋產業數</div></div>
     </div>
     <h3 style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:12px">最近研究</h3>
-    ${total===0?`<div class="empty-state"><div class="es-icon">📂</div><h3>尚無研究檔案</h3><p>點選右上角「新增公司」開始第一份研究</p></div>`:
-    `<div class="company-grid">${recentCards}</div>`}
-    ${total>3?`<div style="margin-top:12px"><button class="btn" onclick="navigate('companies')">查看全部 ${total} 家公司 →</button></div>`:''}
+    ${cos.length===0?emptyState('📂','尚無研究檔案','點選右上角「新增公司」開始第一份研究'):`<div class="company-grid">${cards}</div>`}
+    ${cos.length>3?`<div style="margin-top:12px"><button class="btn" onclick="navigate('companies')">查看全部 ${cos.length} 家 →</button></div>`:''}
   </div>`;
+}
+function coCard(c){
+  const p=chapterProgress(c);
+  return `<div class="company-card" onclick="navigate('research',{companyId:'${c.id}',chapter:'c1'})">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
+      <div><div class="co-name">${c.name}</div><div class="co-code">${c.code||'—'}</div></div>
+      <span class="tag industry">${c.industry}</span>
+    </div>
+    <div class="co-tags"><span class="tag stage">第${c.stage}階段</span><span class="tag difficulty-${c.difficulty}">${{low:'低',mid:'中',high:'中高'}[c.difficulty]}</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(p/14*100)}%"></div></div>
+    <div class="progress-label"><span>${p}/14 章完成</span><span>${Math.round(p/14*100)}%</span></div>
+  </div>`;
+}
+function emptyState(icon,title,desc){
+  return `<div class="empty-state"><div class="es-icon">${icon}</div><h3>${title}</h3><p>${desc}</p></div>`;
 }
 
 // ── COMPANIES ───────────────────────────────────────────
 function renderCompanies(){
-  let cos = db.companies.slice();
-  if(filterIndustry) cos = cos.filter(c=>c.industry===filterIndustry);
-  if(filterStage) cos = cos.filter(c=>String(c.stage)===String(filterStage));
-
-  const cards = cos.map(c=>`
-    <div class="company-card">
-      <div class="co-header" onclick="navigate('research',{companyId:'${c.id}',chapter:'c1'})">
-        <div><div class="co-name">${c.name}</div><div class="co-code">${c.code||'—'}</div></div>
-        <span class="tag difficulty-${c.difficulty}">${{low:'低',mid:'中',high:'中高'}[c.difficulty]||'中'}</span>
-      </div>
-      <div class="co-tags" onclick="navigate('research',{companyId:'${c.id}',chapter:'c1'})">
-        <span class="tag industry">${c.industry}</span>
-        <span class="tag stage">第${c.stage}階段</span>
-      </div>
+  let cos=db.companies.slice();
+  if(filterIndustry)cos=cos.filter(c=>c.industry===filterIndustry);
+  if(filterStage)cos=cos.filter(c=>String(c.stage)===String(filterStage));
+  const cards=cos.map(c=>{
+    const p=chapterProgress(c);
+    return `<div class="company-card">
       <div onclick="navigate('research',{companyId:'${c.id}',chapter:'c1'})">
-        <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(chapterProgress(c)/14*100)}%"></div></div>
-        <div class="progress-label"><span>${chapterProgress(c)}/14 章完成</span><span>${Math.round(chapterProgress(c)/14*100)}%</span></div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
+          <div><div class="co-name">${c.name}</div><div class="co-code">${c.code||'—'}</div></div>
+          <span class="tag difficulty-${c.difficulty}">${{low:'低',mid:'中',high:'中高'}[c.difficulty]}</span>
+        </div>
+        <div class="co-tags"><span class="tag industry">${c.industry}</span><span class="tag stage">第${c.stage}階段</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(p/14*100)}%"></div></div>
+        <div class="progress-label"><span>${p}/14 章完成</span><span>${Math.round(p/14*100)}%</span></div>
       </div>
-      <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+      <div style="margin-top:10px;display:flex;gap:6px">
         <button class="btn" style="font-size:12px;padding:4px 10px" onclick="navigate('research',{companyId:'${c.id}',chapter:'c1'})">✏️ 繼續研究</button>
         <button class="btn btn-danger" style="font-size:12px;padding:4px 10px" onclick="confirmDelete('${c.id}','${c.name}')">🗑 刪除</button>
       </div>
-    </div>`).join('');
-
+    </div>`;
+  }).join('');
   return `<div style="padding:24px">
     <div class="filter-bar">
-      <input class="search-input" placeholder="搜尋公司名稱…" oninput="filterBySearch(this.value)" id="search-input">
+      <input class="search-input" placeholder="搜尋公司名稱…" oninput="searchFilter(this.value)">
       <select class="filter-select" onchange="filterByIndustry(this.value)">
         <option value="">所有產業</option>
         ${['半導體','電子代工','金融','消費','電信','原物料','航運','其他'].map(i=>`<option value="${i}" ${filterIndustry===i?'selected':''}>${i}</option>`).join('')}
       </select>
       <select class="filter-select" onchange="filterByStage(this.value)">
-        <option value="">所有階段</option>
-        ${[1,2,3,4,5].map(s=>`<option value="${s}" ${filterStage==s?'selected':''}>${s}</option>`).join('')}
+        <option value="">所有階段</option>${[1,2,3,4,5].map(s=>`<option value="${s}" ${filterStage==s?'selected':''}>${s}</option>`).join('')}
       </select>
     </div>
-    ${cos.length===0?`<div class="empty-state"><div class="es-icon">🔍</div><h3>找不到符合條件的公司</h3><p>試試調整篩選條件，或新增研究公司</p></div>`:
-    `<div class="company-grid">${cards}</div>`}
+    ${cos.length===0?emptyState('🔍','找不到符合條件的公司','試試調整篩選條件'):`<div class="company-grid">${cards}</div>`}
   </div>`;
 }
-
-function filterBySearch(val){
-  const cos = db.companies.filter(c=>c.name.includes(val)||(c.code||'').includes(val));
-  document.querySelector('.company-grid').innerHTML = cos.map(c=>`
-    <div class="company-card" onclick="navigate('research',{companyId:'${c.id}',chapter:'c1'})">
-      <div class="co-header"><div><div class="co-name">${c.name}</div><div class="co-code">${c.code||'—'}</div></div>
-      <span class="tag industry">${c.industry}</span></div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(chapterProgress(c)/14*100)}%"></div></div>
-      <div class="progress-label"><span>第${c.stage}階段</span><span>${chapterProgress(c)}/14章</span></div>
-    </div>`).join('');
-}
-function filterByIndustry(val){filterIndustry=val; navigate('companies');}
-function filterByStage(val){filterStage=val; navigate('companies');}
+function searchFilter(v){filterIndustry='';filterStage='';
+  document.querySelector('.company-grid').innerHTML=db.companies.filter(c=>c.name.includes(v)||(c.code||'').includes(v)).map(coCard).join('');}
+function filterByIndustry(v){filterIndustry=v;navigate('companies');}
+function filterByStage(v){filterStage=v;navigate('companies');}
 
 // ── PROGRESS ────────────────────────────────────────────
 function renderProgress(){
-  const cos = db.companies;
-  if(cos.length===0) return `<div style="padding:24px"><div class="empty-state"><div class="es-icon">📈</div><h3>尚無研究進度</h3><p>先新增公司再來追蹤進度</p></div></div>`;
-
-  const rows = cos.map(c=>{
-    const p = chapterProgress(c);
-    return `<tr>
-      <td style="padding:10px 12px;font-weight:600;cursor:pointer;color:var(--blue)" onclick="navigate('research',{companyId:'${c.id}',chapter:'c1'})">${c.name}</td>
-      <td style="padding:10px 12px;color:var(--dark-gray)">${c.code||'—'}</td>
-      <td style="padding:10px 12px"><span class="tag industry">${c.industry}</span></td>
-      <td style="padding:10px 12px"><span class="tag stage">第${c.stage}階段</span></td>
-      <td style="padding:10px 12px;min-width:160px">
-        <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(p/14*100)}%"></div></div>
-        <div style="font-size:11px;color:var(--dark-gray);margin-top:3px">${p}/14 章</div>
-      </td>
-      <td style="padding:10px 12px;font-size:13px;font-weight:600;color:${p===14?'var(--success)':p>0?'#744210':'var(--dark-gray)'}">
-        ${p===14?'✅ 完成':p>0?'🔄 進行中':'⭕ 未開始'}
-      </td>
-    </tr>`;
-  }).join('');
-
-  return `<div style="padding:24px">
-    <div style="background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden">
-      <table style="width:100%;border-collapse:collapse;font-size:14px">
-        <thead><tr style="background:var(--light-gray);border-bottom:1px solid var(--border)">
-          <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--navy)">公司</th>
-          <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--navy)">代號</th>
-          <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--navy)">產業</th>
-          <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--navy)">階段</th>
-          <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--navy)">進度</th>
-          <th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--navy)">狀態</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
-  </div>`;
+  if(!db.companies.length)return `<div style="padding:24px">${emptyState('📈','尚無研究進度','先新增公司再來追蹤進度')}</div>`;
+  const rows=db.companies.map(c=>{const p=chapterProgress(c);return `<tr>
+    <td style="padding:10px 12px;font-weight:600;cursor:pointer;color:var(--blue)" onclick="navigate('research',{companyId:'${c.id}',chapter:'c1'})">${c.name}</td>
+    <td style="padding:10px 12px;color:var(--dark-gray)">${c.code||'—'}</td>
+    <td style="padding:10px 12px"><span class="tag industry">${c.industry}</span></td>
+    <td style="padding:10px 12px"><span class="tag stage">第${c.stage}階段</span></td>
+    <td style="padding:10px 12px;min-width:160px">
+      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(p/14*100)}%"></div></div>
+      <div style="font-size:11px;color:var(--dark-gray);margin-top:3px">${p}/14 章</div>
+    </td>
+    <td style="padding:10px 12px;font-size:13px;font-weight:600;color:${p===14?'var(--success)':p>0?'#744210':'var(--dark-gray)'}">
+      ${p===14?'✅ 完成':p>0?'🔄 進行中':'⭕ 未開始'}
+    </td>
+  </tr>`;}).join('');
+  return `<div style="padding:24px"><div style="background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden">
+    <table style="width:100%;border-collapse:collapse;font-size:14px">
+      <thead><tr style="background:var(--light-gray);border-bottom:1px solid var(--border)">
+        ${['公司','代號','產業','階段','進度','狀態'].map(h=>`<th style="padding:10px 12px;text-align:left;font-weight:600;color:var(--navy)">${h}</th>`).join('')}
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div></div>`;
 }
 
-// ── RESEARCH ────────────────────────────────────────────
-function chapterProgress(co){
-  if(!co.chapters) return 0;
-  return CHAPTERS.filter(ch=>{
-    const d = co.chapters[ch.id];
-    if(!d) return false;
-    return Object.entries(d).some(([k,v])=>{
-      if(k.endsWith('_rowcount')) return false;
-      return typeof v==='string'?v.trim().length>0:(typeof v==='boolean'?v:false);
-    });
-  }).length;
-}
-
-function isChapterDone(co, chId){
-  if(!co.chapters||!co.chapters[chId]) return false;
-  const d = co.chapters[chId];
-  return Object.entries(d).some(([k,v])=>{
-    if(k.endsWith('_rowcount')) return false;
-    return typeof v==='string'?v.trim().length>0:(typeof v==='boolean'?v:false);
-  });
-}
-
+// ── RESEARCH SHELL ───────────────────────────────────────
 function renderResearch(co){
-  if(!co) return '<div style="padding:24px">找不到公司</div>';
-
-  const chNav = CHAPTERS.map(ch=>`
-    <button class="ch-btn ${ch.id===activeChapter?'active':''} ${isChapterDone(co,ch.id)?'done':''}"
-      onclick="navigate('research',{companyId:'${co.id}',chapter:'${ch.id}'})">
-      ${isChapterDone(co,ch.id)?'✓ ':''} ${ch.title.split('、')[0].replace(/[一二三四五六七八九十]+/,'$&')}
-    </button>`).join('');
-
-  const ch = co.chapters||{};
-  const d = ch[activeChapter]||{};
-
-  let chapterHTML = '';
-  if(activeChapter==='c1') chapterHTML = renderC1(d);
-  else if(activeChapter==='c2') chapterHTML = renderC2(d);
-  else if(activeChapter==='c3') chapterHTML = renderC3(d);
-  else if(activeChapter==='c4') chapterHTML = renderC4(d);
-  else if(activeChapter==='c5') chapterHTML = renderC5(d);
-  else if(activeChapter==='c6') chapterHTML = renderC6(d);
-  else if(activeChapter==='c7') chapterHTML = renderC7(d);
-  else if(activeChapter==='c8') chapterHTML = renderC8(d);
-  else if(activeChapter==='c9') chapterHTML = renderC9(d);
-  else if(activeChapter==='c10') chapterHTML = renderC10(d);
-  else if(activeChapter==='c11') chapterHTML = renderC11(d);
-  else if(activeChapter==='c12') chapterHTML = renderC12(d);
-  else if(activeChapter==='c13') chapterHTML = renderC13(d);
-  else if(activeChapter==='c14') chapterHTML = renderC14(d);
-
-  const idx = CHAPTERS.findIndex(c=>c.id===activeChapter);
-  const prevCh = idx>0?CHAPTERS[idx-1]:null;
-  const nextCh = idx<CHAPTERS.length-1?CHAPTERS[idx+1]:null;
-
+  if(!co)return '<div style="padding:24px">找不到公司</div>';
+  const d=co.chapters?.[activeChapter]||{};
+  const idx=CHAPTERS.findIndex(c=>c.id===activeChapter);
+  const chNav=CHAPTERS.map(ch=>`<button class="ch-btn ${ch.id===activeChapter?'active':''} ${chapterHasData(co,ch.id)?'done':''}"
+    onclick="navigate('research',{companyId:'${co.id}',chapter:'${ch.id}'})">${chapterHasData(co,ch.id)?'✓ ':''}${ch.title.split('、')[0]}</button>`).join('');
+  const prev=CHAPTERS[idx-1],next=CHAPTERS[idx+1];
+  const p=chapterProgress(co);
   return `<div style="padding:24px">
     <div style="margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <button class="btn" onclick="navigate('companies')" style="font-size:12px">← 返回列表</button>
-      <span style="font-size:13px;color:var(--dark-gray)">研究進度：${chapterProgress(co)}/14 章</span>
-      <div class="progress-bar" style="flex:1;min-width:100px"><div class="progress-fill" style="width:${Math.round(chapterProgress(co)/14*100)}%"></div></div>
+      <span style="font-size:13px;color:var(--dark-gray)">${p}/14 章</span>
+      <div class="progress-bar" style="flex:1;min-width:80px"><div class="progress-fill" style="width:${Math.round(p/14*100)}%"></div></div>
     </div>
     <div class="chapter-nav">${chNav}</div>
     <div class="chapter-card">
       <div class="chapter-title">
-        <span class="ch-check ${isChapterDone(co,activeChapter)?'done':''}">✓</span>
+        <span class="ch-check ${chapterHasData(co,activeChapter)?'done':''}">✓</span>
         ${CHAPTERS[idx].title}
       </div>
-      <div class="chapter-body">${chapterHTML}</div>
+      <div class="chapter-body">${renderChapter(activeChapter,d)}</div>
     </div>
     <div style="display:flex;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:8px">
-      ${prevCh?`<button class="btn" onclick="navigate('research',{companyId:'${co.id}',chapter:'${prevCh.id}'})">← ${prevCh.title}</button>`:'<div></div>'}
+      ${prev?`<button class="btn" onclick="navigate('research',{companyId:'${co.id}',chapter:'${prev.id}'})">← ${prev.title}</button>`:'<div></div>'}
       <button class="btn btn-primary" onclick="saveChapter()">💾 儲存本章</button>
-      ${nextCh?`<button class="btn" onclick="navigate('research',{companyId:'${co.id}',chapter:'${nextCh.id}'})">下一章 →</button>`:'<div></div>'}
+      ${next?`<button class="btn" onclick="navigate('research',{companyId:'${co.id}',chapter:'${next.id}'})">下一章 →</button>`:'<div></div>'}
     </div>
   </div>`;
 }
 
-// ── CHAPTER TEMPLATES ────────────────────────────────────
-function tf(id,label,val='',rows=1){
-  return `<div class="form-group"><label>${label}</label>${rows>1?
-    `<textarea class="form-control" data-field="${id}" rows="${rows}">${val}</textarea>`:
-    `<input class="form-control" data-field="${id}" value="${val||''}">`}
-  </div>`;
+// ── CHAPTER RENDERER ────────────────────────────────────
+function renderChapter(id,d){
+  switch(id){
+    case'c1':return c1(d);case'c2':return c2(d);case'c3':return c3(d);
+    case'c4':return c4(d);case'c5':return c5(d);case'c6':return c6(d);
+    case'c7':return c7(d);case'c8':return c8(d);case'c9':return c9(d);
+    case'c10':return c10(d);case'c11':return c11(d);case'c12':return c12(d);
+    case'c13':return c13(d);case'c14':return c14(d);
+  }
 }
-function rb(question){
+
+// ── HELPERS ─────────────────────────────────────────────
+function f(id,label,d,ph=''){return rte(id,ph||label.replace(/：$/,''),d[id]||'')+'<style>#ed_'+id+'{}</style>'.replace('<style>#ed_'+id+'{}</style>','');}
+// simpler: just call rte directly with label
+function field(id,label,d,ph){return rte(id,ph||label,d[id]||'');}
+
+function resBox(q,d){
   return `<div class="research-box"><div class="rb-title">🔍 研究思考</div>
-    ${tf('rq','研究問題：'+question,'',1)}
-    ${tf('hypo','假說（Hypothesis）：','',2)}
-    ${tf('support','支持證據①②③：','',3)}
-    ${tf('oppose','反對證據（反方觀點）①②③：','',3)}
-    ${tf('conclusion','本章目前結論：','',2)}
-    ${tf('unanswered','本章仍未回答的問題：','',2)}
+    ${field('rq','研究問題：'+q,d)}
+    ${field('hypo','假說（Hypothesis）：',d,'寫下你的假設…')}
+    ${field('support','支持證據 ①②③',d,'列出支持你假說的證據…')}
+    ${field('oppose','反對證據（反方觀點）①②③',d,'列出可能推翻假說的反例…')}
+    ${field('conclusion','本章目前結論：',d,'根據目前資料，你的結論是…')}
+    ${field('unanswered','本章仍未回答的問題：',d,'還有哪些問題需要繼續追蹤…')}
   </div>`;
 }
-function sb(){
+function srcBox(d){
   return `<div class="source-box"><div class="rb-title">📎 資料來源</div>
-    <div class="form-row">
-      ${tf('src_annual','年報：')}${tf('src_investor','法說會：')}
-    </div>
-    <div class="form-row">
-      ${tf('src_mops','公開資訊觀測站：')}${tf('src_gov','政府/產業數據：')}
-    </div>
-    ${tf('src_other','其他來源：')}
+    <div class="form-row">${field('src_annual','年報：',d,'填寫年報出處或連結')}${field('src_investor','法說會：',d,'填寫日期與來源')}</div>
+    <div class="form-row">${field('src_mops','公開資訊觀測站：',d,'填寫查詢項目')}${field('src_gov','政府/產業數據：',d,'填寫機構與資料名稱')}</div>
+    ${field('src_other','其他來源：',d,'')}
   </div>`;
 }
-function tableInput(id, headers, rows, data={}, expandable=false, textareaCols=[]){
-  const ths = headers.map(h=>`<th>${h}</th>`).join('') + (expandable?'<th style="width:36px"></th>':'');
-  // determine how many rows actually exist (base rows + any extra saved rows)
-  let rowCount = rows.length;
-  if(expandable){
-    const extraKey = `${id}_rowcount`;
-    const savedCount = parseInt(data[extraKey]||'0',10);
-    rowCount = Math.max(rows.length, savedCount);
-  }
-  const escapeHtml = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const cellHTML = (key, val, placeholder, ci) => {
-    if(textareaCols.includes(ci)){
-      return `<td><textarea data-field="${key}" rows="3" placeholder="${placeholder}\n可用 - 或 1. 條列\n按 Enter 換行">${escapeHtml(val)}</textarea></td>`;
-    }
-    return `<td><input data-field="${key}" value="${escapeHtml(val)}" placeholder="${placeholder}"></td>`;
-  };
-  let trs = '';
-  for(let ri=0; ri<rowCount; ri++){
-    const cols = rows[ri] || rows[0].map(()=>'');
-    trs += `<tr data-table="${id}" data-row="${ri}">${cols.map((cell,ci)=>{
-      const key=`${id}_r${ri}_c${ci}`;
-      return cellHTML(key, data[key]||'', ri<rows.length?cell:'', ci);
-    }).join('')}${expandable?`<td style="text-align:center;border:none;padding:0"><button type="button" class="row-del-btn" title="刪除此列" onclick="deleteTableRow('${id}',${ri})">✕</button></td>`:''}</tr>`;
-  }
-  const addBtn = expandable?`<div style="margin-top:6px"><button type="button" class="btn" style="font-size:12px;padding:4px 12px" onclick="addTableRow('${id}',${headers.length},'${textareaCols.join(',')}')">+ 新增一列</button></div>`:'';
-  return `<div style="overflow-x:auto;margin:8px 0" id="tablewrap_${id}"><table class="table-input"><thead><tr>${ths}</tr></thead><tbody id="tbody_${id}">${trs}</tbody></table></div>${addBtn}<input type="hidden" data-field="${id}_rowcount" value="${rowCount}">`;
-}
+function secHead(t){return `<div class="section-heading">${t}</div>`;}
 
-function addTableRow(id, colCount, textareaColsStr){
-  const textareaCols = (textareaColsStr||'').split(',').filter(s=>s!=='').map(Number);
-  const tbody = document.getElementById('tbody_'+id);
-  const ri = tbody.querySelectorAll('tr').length;
-  let cells = '';
-  for(let ci=0; ci<colCount; ci++){
-    if(textareaCols.includes(ci)){
-      cells += `<td><textarea data-field="${id}_r${ri}_c${ci}" rows="3" placeholder="可用 - 或 1. 條列\n按 Enter 換行"></textarea></td>`;
-    } else {
-      cells += `<td><input data-field="${id}_r${ri}_c${ci}" value=""></td>`;
-    }
-  }
-  cells += `<td style="text-align:center;border:none;padding:0"><button type="button" class="row-del-btn" title="刪除此列" onclick="deleteTableRow('${id}',${ri})">✕</button></td>`;
-  const tr = document.createElement('tr');
-  tr.dataset.table = id;
-  tr.dataset.row = ri;
-  tr.innerHTML = cells;
-  tbody.appendChild(tr);
-  const hiddenField = document.querySelector(`[data-field="${id}_rowcount"]`);
-  if(hiddenField) hiddenField.value = ri+1;
-  tr.querySelectorAll('[data-field]').forEach(el=>{
-    el.addEventListener('change', ()=>autoSave(db.companies.find(c=>c.id===currentCompanyId)));
-    el.addEventListener('input', ()=>autoSave(db.companies.find(c=>c.id===currentCompanyId)));
-  });
-  autoSave(db.companies.find(c=>c.id===currentCompanyId));
-}
-
-function deleteTableRow(id, ri){
-  const tbody = document.getElementById('tbody_'+id);
-  const row = tbody.querySelector(`tr[data-row="${ri}"]`);
-  if(row) row.remove();
-  const hiddenField = document.querySelector(`[data-field="${id}_rowcount"]`);
-  if(hiddenField) hiddenField.value = tbody.querySelectorAll('tr').length;
-  autoSave(db.companies.find(c=>c.id===currentCompanyId));
-}
-
-function renderC1(d){return `
-  ${tf('intro_name','公司全名：',d.intro_name)}
-  <div class="form-row">${tf('intro_founded','成立年份 / 上市年份：',d.intro_founded)}${tf('intro_hq','總部地點：',d.intro_hq)}</div>
-  ${tf('intro_biz','主要業務（一句話）：',d.intro_biz)}
-  ${tf('intro_customer','核心客戶是誰？',d.intro_customer)}
-  ${tf('intro_value','公司核心價值主張（為何客戶選它？）：',d.intro_value,'',2)}
-  <div class="section-heading">收入來源拆解</div>
-  ${tableInput('rev',['業務類別','收入佔比(%)','成長趨勢','備註'],
+// ── 14 CHAPTERS ─────────────────────────────────────────
+function c1(d){return `
+  ${field('intro_name','公司全名',d)}
+  <div class="form-row">${field('intro_founded','成立年份 / 上市年份',d)}${field('intro_hq','總部地點',d)}</div>
+  ${field('intro_biz','主要業務（一句話）',d,'用一句話說明這家公司做什麼')}
+  ${field('intro_customer','核心客戶是誰？',d)}
+  ${field('intro_value','公司核心價值主張（為何客戶選它？）',d)}
+  ${secHead('收入來源拆解')}
+  ${tblInput('rev',['業務類別','收入佔比(%)','成長趨勢','備註'],
     [['','','',''],['','','',''],['','','',''],['','','','']],d,true,[3])}
-  ${rb('這家公司真正靠什麼賺錢？主要收入來源未來是否穩定？')}
-  ${sb()}`;}
+  ${resBox('這家公司真正靠什麼賺錢？主要收入來源未來是否穩定？',d)}
+  ${srcBox(d)}`;}
 
-function renderC2(d){return `
-  ${tf('biz_type','商業模式類型（訂閱/代工/品牌/平台等）：',d.biz_type)}
-  ${tf('biz_cost','主要成本結構（固定成本 vs 變動成本）：',d.biz_cost,'',2)}
-  ${tf('biz_pricing','定價能力（能否漲價？依據是什麼？）：',d.biz_pricing,'',2)}
-  <div class="section-heading">價值鏈位置</div>
-  ${tf('vc_position','在產業價值鏈中，公司位於哪個環節：',d.vc_position)}
-  ${tf('vc_upstream','上游供應商依賴程度：',d.vc_upstream,'',2)}
-  ${tf('vc_downstream','下游客戶集中度：',d.vc_downstream,'',2)}
-  ${tf('vc_power','公司在價值鏈中的議價能力強弱：',d.vc_power,'',2)}
-  ${rb('公司的商業模式是否具備持續性？價值鏈地位是強化還是弱化中？')}
-  ${sb()}`;}
+function c2(d){return `
+  ${field('biz_type','商業模式類型（訂閱/代工/品牌/平台等）',d)}
+  ${field('biz_cost','主要成本結構（固定成本 vs 變動成本）',d)}
+  ${field('biz_pricing','定價能力（能否漲價？依據是什麼？）',d)}
+  ${secHead('價值鏈位置')}
+  ${field('vc_position','在產業價值鏈中，公司位於哪個環節',d)}
+  ${field('vc_upstream','上游供應商依賴程度',d)}
+  ${field('vc_downstream','下游客戶集中度',d)}
+  ${field('vc_power','公司在價值鏈中的議價能力強弱',d)}
+  ${resBox('公司的商業模式是否具備持續性？價值鏈地位是強化還是弱化中？',d)}
+  ${srcBox(d)}`;}
 
-function renderC3(d){return `
-  <div class="section-heading">管理層評分</div>
-  ${tableInput('mgmt',['評分項目','說明','分數（滿分）'],
-    [['創辦人/大股東仍掌權','','  /2'],['管理層持股比例','','  /2'],
-     ['資本配置能力（ROE、股利、回購決策）','','  /3'],['誠信紀錄（有無法律/會計問題）','','  /3'],['合計','','  /10']],d)}
-  ${tf('mgmt_decisions','近三年最重要的資本配置決策：',d.mgmt_decisions,'',3)}
-  ${tf('mgmt_comms','管理層對投資人的溝通評價（透明度）：',d.mgmt_comms,'',2)}
-  ${rb('管理層的決策是否真正為股東創造價值？有哪些反例？')}
-  ${sb()}`;}
+function c3(d){return `
+  ${secHead('管理層評分')}
+  ${tblInput('mgmt',['評分項目','說明','分數（滿分）'],
+    [['創辦人/大股東仍掌權','','/2'],['管理層持股比例','','/2'],
+     ['資本配置能力（ROE、股利、回購）','','/3'],['誠信紀錄（有無法律/會計問題）','','/3'],['合計','','/10']],d)}
+  ${field('mgmt_decisions','近三年最重要的資本配置決策',d,'例：大型收購、建新廠、增發股票…')}
+  ${field('mgmt_comms','管理層對投資人的溝通評價（透明度）',d)}
+  ${resBox('管理層的決策是否真正為股東創造價值？有哪些反例？',d)}
+  ${srcBox(d)}`;}
 
-function renderC4(d){return `
-  ${tableInput('moat',['護城河類型','有/無/弱','判斷依據'],
+function c4(d){return `
+  ${tblInput('moat',['護城河類型','有/無/弱','判斷依據'],
     [['成本優勢（Cost Advantage）','',''],['網路效應（Network Effect）','',''],
      ['轉換成本（Switching Cost）','',''],['無形資產（品牌/專利）','',''],
-     ['規模效應（Economies of Scale）','','']],d)}
-  ${tf('moat_strength','護城河強度（強/中/弱/無）：',d.moat_strength)}
-  ${tf('moat_trend','護城河正在擴大還是縮小？理由：',d.moat_trend,'',2)}
-  ${tf('moat_break','什麼情況下護城河會被打破？',d.moat_break,'',2)}
-  ${rb('護城河真的存在嗎？有哪些跡象顯示它比想像中弱？')}
-  ${sb()}`;}
+     ['規模效應（Economies of Scale）','','']],d,false,[2])}
+  ${field('moat_strength','護城河強度（強/中/弱/無）',d)}
+  ${field('moat_trend','護城河正在擴大還是縮小？理由',d)}
+  ${field('moat_break','什麼情況下護城河會被打破？',d)}
+  ${resBox('護城河真的存在嗎？有哪些跡象顯示它比想像中弱？',d)}
+  ${srcBox(d)}`;}
 
-function renderC5(d){return `
-  ${tf('ind_name','產業名稱/子產業：',d.ind_name)}
-  <div class="form-row">${tf('ind_tam','產業規模（TAM）與成長率：',d.ind_tam)}${tf('ind_cycle','所處周期階段（導入/成長/成熟/衰退）：',d.ind_cycle)}</div>
-  <div class="section-heading">Porter 五力分析</div>
-  ${tableInput('porter',['五力','強度(1~5)','關鍵說明'],
+function c5(d){return `
+  ${field('ind_name','產業名稱/子產業',d)}
+  <div class="form-row">${field('ind_tam','產業規模（TAM）與成長率',d)}${field('ind_cycle','所處周期階段（導入/成長/成熟/衰退）',d)}</div>
+  ${secHead('Porter 五力分析')}
+  ${tblInput('porter',['五力','強度(1~5)','關鍵說明'],
     [['現有競爭者競爭強度','',''],['新進入者威脅','',''],
-     ['替代品威脅','',''],['買方議價力','',''],['賣方議價力','','']],d)}
-  ${tf('ind_events','近三個月重要事件（政策/技術/市場）：',d.ind_events,'',3)}
-  ${tf('ind_watch','未來一年需持續觀察的關鍵指標：',d.ind_watch,'',3)}
-  ${rb('產業結構是否對公司有利？未來三年產業格局可能如何變化？')}
-  ${sb()}`;}
+     ['替代品威脅','',''],['買方議價力','',''],['賣方議價力','','']],d,false,[2])}
+  ${field('ind_events','近三個月重要事件（政策/技術/市場）',d,'可用 - 條列出各事件…')}
+  ${field('ind_watch','未來一年需持續觀察的關鍵指標',d,'可用 - 條列出各指標…')}
+  ${resBox('產業結構是否對公司有利？未來三年產業格局可能如何變化？',d)}
+  ${srcBox(d)}`;}
 
-function renderC6(d){return `
-  ${tf('eco_market_type','公司的定價行為接近哪種市場結構（完全競爭/壟斷競爭/寡佔/獨佔）？理由：',d.eco_market_type,'',2)}
-  ${tf('eco_elasticity','彈性分析：公司產品需求的價格彈性如何？',d.eco_elasticity,'',2)}
-  <div class="section-heading">經濟學專題應用</div>
-  ${tf('eco_concept','選一個經濟學概念（例：規模報酬遞增、外部性、資訊不對稱）並說明它如何解釋這家公司的行為：',d.eco_concept,'',5)}
-  ${rb('哪個經濟學原理最能解釋這家公司的競爭優勢或弱點？')}
-  ${sb()}`;}
+function c6(d){return `
+  ${field('eco_market_type','公司的定價行為接近哪種市場結構（完全競爭/壟斷競爭/寡佔/獨佔）？理由',d)}
+  ${field('eco_elasticity','彈性分析：公司產品需求的價格彈性如何？',d)}
+  ${secHead('經濟學專題應用')}
+  ${field('eco_concept','選一個經濟學概念（例：規模報酬遞增、外部性、資訊不對稱）並說明如何解釋這家公司的行為',d,'例：台積電的規模報酬遞增體現在…')}
+  ${resBox('哪個經濟學原理最能解釋這家公司的競爭優勢或弱點？',d)}
+  ${srcBox(d)}`;}
 
-function renderC7(d){return `
-  <div class="section-heading">總體環境敏感度</div>
-  ${tableInput('macro',['總體變數','影響方向（正/負/中性）','影響程度（強/中/弱）','說明'],
+function c7(d){return `
+  ${secHead('總體環境敏感度')}
+  ${tblInput('macro',['總體變數','影響方向（正/負/中性）','影響程度（強/中/弱）','說明'],
     [['利率','','',''],['匯率','','',''],['通膨','','',''],
-     ['GDP成長率','','',''],['油價/原物料','','','']],d)}
-  ${tf('macro_type','這家公司屬於景氣循環股/防禦型股/成長型股？判斷依據：',d.macro_type,'',2)}
-  ${tf('macro_position','目前景氣位於哪個階段？對公司的影響：',d.macro_position,'',2)}
-  ${rb('當前總體環境是公司的順風還是逆風？未來12個月的關鍵總經風險？')}
-  ${sb()}`;}
+     ['GDP成長率','','',''],['油價/原物料','','','']],d,false,[3])}
+  ${field('macro_type','這家公司屬於景氣循環股/防禦型股/成長型股？判斷依據',d)}
+  ${field('macro_position','目前景氣位於哪個階段？對公司的影響',d)}
+  ${resBox('當前總體環境是公司的順風還是逆風？未來12個月的關鍵總經風險？',d)}
+  ${srcBox(d)}`;}
 
-function renderC8(d){return `
-  <div class="section-heading">損益表趨勢（近五年）</div>
-  ${tableInput('income',['項目','N-4年','N-3年','N-2年','N-1年','N年（最新）'],
+function c8(d){return `
+  ${secHead('損益表趨勢（近五年）')}
+  ${tblInput('income',['項目','N-4年','N-3年','N-2年','N-1年','N年（最新）'],
     [['營業收入（億）','','','','',''],['毛利率（%）','','','','',''],
      ['營業利益率（%）','','','','',''],['稅後淨利率（%）','','','','',''],
      ['EPS（元）','','','','','']],d)}
-  <div class="section-heading">資產負債表</div>
-  <div class="form-row">${tf('bs_debt','負債比率：',d.bs_debt)}${tf('bs_current','流動比率：',d.bs_current)}</div>
-  ${tf('bs_structure','主要資產結構說明：',d.bs_structure,'',2)}
-  <div class="section-heading">現金流量</div>
-  ${tableInput('cf',['項目','N-2年','N-1年','N年'],
+  ${secHead('資產負債表')}
+  <div class="form-row">${field('bs_debt','負債比率',d)}${field('bs_current','流動比率',d)}</div>
+  ${field('bs_structure','主要資產結構說明',d,'例：固定資產比重高代表資本密集…')}
+  ${secHead('現金流量')}
+  ${tblInput('cf',['項目','N-2年','N-1年','N年'],
     [['營業現金流（OCF）','','',''],['資本支出（CAPEX）','','',''],
      ['自由現金流（FCF=OCF-CAPEX）','','','']],d)}
-  <div class="section-heading">杜邦分析</div>
-  ${tableInput('dupont',['ROE拆解','數值(%)','年度變化說明'],
+  ${secHead('杜邦分析')}
+  ${tblInput('dupont',['ROE拆解','數值(%)','年度變化說明'],
     [['淨利率（Profit Margin）','',''],['資產周轉率（Asset Turnover）','',''],
-     ['財務槓桿（Equity Multiplier）','',''],['ROE = 三者相乘','','']],d)}
-  ${rb('財報數字背後的故事是什麼？哪個指標最令你擔憂？')}
-  ${sb()}`;}
+     ['財務槓桿（Equity Multiplier）','',''],['ROE = 三者相乘','','']],d,false,[2])}
+  ${resBox('財報數字背後的故事是什麼？哪個指標最令你擔憂？',d)}
+  ${srcBox(d)}`;}
 
-function renderC9(d){
-  const checks=['oc_ocf','oc_ar','oc_inv','oc_gpm','oc_debt','oc_auditor'];
-  const labels=['營業現金流 ≥ 淨利（盈餘有現金支撐）','應收帳款成長率 ≤ 營收成長率（無虛增收入跡象）',
-    '存貨成長率 ≤ 營收成長率（無積壓問題）','毛利率趨勢穩定或上升（核心競爭力未流失）',
-    '負債比率未異常飆升','無頻繁更換會計師事務所'];
-  const checkHTML = `<ul class="check-list">${checks.map((k,i)=>
-    `<li><input type="checkbox" data-field="${k}" ${d[k]?'checked':''}><span>${labels[i]}</span></li>`
-  ).join('')}</ul>`;
-  return `<div class="section-heading">盈餘品質核對清單</div>${checkHTML}
-  ${tf('fq_oneoff','是否有一次性收益/損失？說明：',d.fq_oneoff,'',2)}
-  ${tf('fq_related','是否有關聯交易或資金往來需特別注意：',d.fq_related,'',2)}
-  ${tf('fq_overall','整體財報品質評估（優/良/中/差）及理由：',d.fq_overall,'',2)}
-  ${rb('這份財報有哪些讓你不放心的地方？如何驗證？')}
-  ${sb()}`;}
+function c9(d){
+  const checks=[
+    ['oc_ocf','營業現金流 ≥ 淨利（盈餘有現金支撐）'],
+    ['oc_ar','應收帳款成長率 ≤ 營收成長率（無虛增收入跡象）'],
+    ['oc_inv','存貨成長率 ≤ 營收成長率（無積壓問題）'],
+    ['oc_gpm','毛利率趨勢穩定或上升（核心競爭力未流失）'],
+    ['oc_debt','負債比率未異常飆升'],
+    ['oc_auditor','無頻繁更換會計師事務所'],
+  ];
+  return `${secHead('盈餘品質核對清單')}
+  <ul class="check-list">${checks.map(([k,l])=>`<li>
+    <input type="checkbox" data-field="${k}" ${d[k]?'checked':''}><span>${l}</span>
+  </li>`).join('')}</ul>
+  ${field('fq_oneoff','是否有一次性收益/損失？說明',d)}
+  ${field('fq_related','是否有關聯交易或資金往來需特別注意',d)}
+  ${field('fq_overall','整體財報品質評估（優/良/中/差）及理由',d)}
+  ${resBox('這份財報有哪些讓你不放心的地方？如何驗證？',d)}
+  ${srcBox(d)}`;}
 
-function renderC10(d){return `
-  <div class="form-row">${tf('comp_a','競爭對手 A：',d.comp_a)}${tf('comp_b','競爭對手 B：',d.comp_b)}</div>
-  ${tf('comp_reason','比較對象選擇理由：',d.comp_reason,'',2)}
-  <div class="section-heading">同業比較表</div>
-  ${tableInput('peer',['指標','本公司','同業A','同業B','產業平均'],
+function c10(d){return `
+  <div class="form-row">${field('comp_a','競爭對手 A',d)}${field('comp_b','競爭對手 B',d)}</div>
+  ${field('comp_reason','比較對象選擇理由',d)}
+  ${secHead('同業比較表')}
+  ${tblInput('peer',['指標','本公司','同業A','同業B','產業平均'],
     [['市值（億）','','','',''],['市占率（%）','','','',''],
      ['營收成長率（%）','','','',''],['毛利率（%）','','','',''],
      ['ROE（%）','','','',''],['本益比（P/E）','','','',''],
      ['殖利率（%）','','','',''],['FCF Yield（%）','','','','']],d)}
-  ${tf('comp_adv','本公司相對同業最大的優勢：',d.comp_adv,'',2)}
-  ${tf('comp_disadv','本公司相對同業最大的劣勢：',d.comp_disadv,'',2)}
-  ${tf('comp_why','為何選擇本公司而非競爭對手投資？（或為何不選）：',d.comp_why,'',2)}
-  ${rb('在這個產業中，本公司是不是最值得投資的選項？為什麼？')}
-  ${sb()}`;}
+  ${field('comp_adv','本公司相對同業最大的優勢',d)}
+  ${field('comp_disadv','本公司相對同業最大的劣勢',d)}
+  ${field('comp_why','為何選擇本公司而非競爭對手投資？（或為何不選）',d)}
+  ${resBox('在這個產業中，本公司是不是最值得投資的選項？',d)}
+  ${srcBox(d)}`;}
 
-function renderC11(d){return `
-  <div class="section-heading">估值指標</div>
-  ${tableInput('val',['估值方法','當前數值','歷史均值(5年)','同業均值','偏高/合理/偏低'],
+function c11(d){return `
+  ${secHead('估值指標')}
+  ${tblInput('val',['估值方法','當前數值','歷史均值(5年)','同業均值','偏高/合理/偏低'],
     [['P/E（本益比）','','','',''],['P/B（股價淨值比）','','','',''],
      ['EV/EBITDA','','','',''],['P/FCF（自由現金流倍數）','','','',''],
      ['殖利率（%）','','','','']],d)}
-  <div class="section-heading">內在價值估算（選做）</div>
-  ${tf('val_method','使用方法（DCF/相對估值/其他）：',d.val_method)}
-  <div class="form-row">${tf('val_range','估算合理股價區間：　元 ～ 　元',d.val_range)}${tf('val_margin','目前股價：　元　安全邊際：　%',d.val_margin)}</div>
-  <div class="section-heading">股東結構</div>
-  ${tf('sh_top5','前五大股東及持股比例：',d.sh_top5,'',3)}
-  <div class="form-row">${tf('sh_foreign','外資持股比例：',d.sh_foreign)}${tf('sh_trust','投信持股比例：',d.sh_trust)}</div>
-  ${tf('sh_changes','近一年股東結構是否有重大變動？說明：',d.sh_changes,'',2)}
-  ${rb('目前股價是否合理？你願意在什麼價格買進？理由？')}
-  ${sb()}`;}
+  ${secHead('內在價值估算（選做）')}
+  ${field('val_method','使用方法（DCF/相對估值/其他）',d)}
+  <div class="form-row">${field('val_range','估算合理股價區間（元）',d,'例：120 ～ 150 元')}${field('val_margin','目前股價與安全邊際',d,'例：股價105元，安全邊際 30%')}</div>
+  ${secHead('股東結構')}
+  ${field('sh_top5','前五大股東及持股比例',d,'可用 1. 條列格式填寫…')}
+  <div class="form-row">${field('sh_foreign','外資持股比例',d)}${field('sh_trust','投信持股比例',d)}</div>
+  ${field('sh_changes','近一年股東結構是否有重大變動？說明',d)}
+  ${resBox('目前股價是否合理？你願意在什麼價格買進？理由？',d)}
+  ${srcBox(d)}`;}
 
-function renderC12(d){return `
-  ${tableInput('risk',['風險類型','具體說明','發生機率(高/中/低)','衝擊程度(高/中/低)','應對方式'],
+function c12(d){return `
+  ${tblInput('risk',['風險類型','具體說明','發生機率(高/中/低)','衝擊程度(高/中/低)','應對方式'],
     [['產業風險','','','',''],['競爭風險','','','',''],['財務風險','','','',''],
-     ['法規/政治風險','','','',''],['總體經濟風險','','','',''],['管理層風險','','','','']],d)}
-  <div class="section-heading">情境分析</div>
-  ${tableInput('scenario',['情境','假設條件','預期影響'],
-    [['樂觀情境','',''],['基本情境','',''],['悲觀情境','','']],d)}
-  ${rb('什麼情況下你的投資論文會被推翻？這個風險現在被市場低估了嗎？')}
-  ${sb()}`;}
+     ['法規/政治風險','','','',''],['總體經濟風險','','','',''],['管理層風險','','','','']],d,false,[1,4])}
+  ${secHead('情境分析')}
+  ${tblInput('scenario',['情境','假設條件','預期影響'],
+    [['樂觀情境','',''],['基本情境','',''],['悲觀情境','','']],d,false,[1,2])}
+  ${resBox('什麼情況下你的投資論文會被推翻？這個風險現在被市場低估了嗎？',d)}
+  ${srcBox(d)}`;}
 
-function renderC13(d){return `
+function c13(d){return `
   <p style="font-size:13px;color:var(--dark-gray);margin-bottom:12px">根據前十二章的研究，整理核心問題的支持與反對證據，形成最終判斷：</p>
-  ${tableInput('em',['核心問題','支持證據（✓）','反對證據（✗）','我的判斷'],
+  ${tblInput('em',['核心問題','支持證據（✓）','反對證據（✗）','我的判斷'],
     [['公司具有競爭力？','','',''],['公司能持續成長？','','',''],
      ['財務健康穩健？','','',''],['估值合理？','','',''],
-     ['值得長期投資？','','','']],d)}
+     ['值得長期投資？','','','']],d,false,[1,2,3])}
   <div style="background:#FFF8F0;border:1px solid #FAD089;border-left:4px solid var(--accent);border-radius:var(--radius);padding:16px;margin-top:16px">
     <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:12px">⚠️ 有條件結論</div>
-    ${tf('cond_valid','我的結論在以下條件成立時有效：',d.cond_valid,'',2)}
-    ${tf('cond_exit','以下情況發生時，應重新評估或退出：',d.cond_exit,'',2)}
+    ${field('cond_valid','我的結論在以下條件成立時有效',d,'列出你的結論成立的前提條件…')}
+    ${field('cond_exit','以下情況發生時，應重新評估或退出',d,'列出需要重新檢視假說的觸發條件…')}
     <p style="font-size:11px;color:#888;margin-top:8px;font-style:italic">注意：結論必須有時間、價格、條件，不可給出無條件的買賣建議</p>
   </div>`;}
 
-function renderC14(d){return `
-  <div class="section-heading">投資論文（Investment Thesis）</div>
+function c14(d){return `
+  ${secHead('投資論文（Investment Thesis）')}
   <p style="font-size:13px;color:var(--dark-gray);margin-bottom:8px">用自己的話回答：這家公司是否具有長期投資價值？根據是什麼？</p>
-  <textarea class="form-control" data-field="thesis" rows="10" placeholder="根據以上研究，我認為...">${d.thesis||''}</textarea>
-  <div class="section-heading">投資決策</div>
-  ${tableInput('decision',['決策項目','填寫'],
+  ${field('thesis','在這裡寫下你的投資論文…',d,'根據以上研究，我認為…')}
+  ${secHead('投資決策')}
+  ${tblInput('decision',['決策項目','填寫'],
     [['投資決策','□ 值得投資  □ 暫不投資  □ 列入觀察'],
-     ['理想買入價格區間','　元 ～ 　元'],
-     ['設定停損點','　元（理由：）'],
-     ['預計持有期間',''],
-     ['預計報酬來源','□ 資本利得  □ 股利  □ 兩者皆有']],d)}
-  ${tf('remaining','尚待解決的問題 / 未來追蹤計畫：',d.remaining,'',4)}
+     ['理想買入價格區間','元 ～ 元'],['設定停損點','元（理由：）'],
+     ['預計持有期間',''],['預計報酬來源','□ 資本利得  □ 股利  □ 兩者皆有']],d)}
+  ${field('remaining','尚待解決的問題 / 未來追蹤計畫',d,'還有哪些問題需要繼續研究？接下來的追蹤重點是…')}
   <div style="background:#F0FFF4;border:1px solid #9AE6B4;border-left:4px solid var(--success);border-radius:var(--radius);padding:14px;margin-top:16px">
     <p style="font-size:12px;color:var(--success);font-weight:700;margin-bottom:4px">📌 研究者聲明</p>
     <p style="font-size:13px;color:#276749;font-style:italic">本研究結論基於公開資訊，並已同時納入支持與反對證據。結論具有條件性，不構成絕對的投資建議。研究者應持續更新資料並修正判斷。</p>
   </div>`;}
-
-// ── BIND SAVE ───────────────────────────────────────────
-function bindResearchEvents(co){
-  document.querySelectorAll('[data-field]').forEach(el => {
-    el.addEventListener('change', ()=>autoSave(co));
-    if(el.tagName==='TEXTAREA'||el.tagName==='INPUT') el.addEventListener('input', ()=>autoSave(co));
-  });
-}
-
-let saveTimer = null;
-function autoSave(co){
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(()=>saveChapterData(co), 800);
-}
-
-function saveChapter(){
-  const co = db.companies.find(c=>c.id===currentCompanyId);
-  if(!co) return;
-  saveChapterData(co);
-  showToast('已儲存 ✓');
-}
-
-function saveChapterData(co){
-  if(!co.chapters) co.chapters = {};
-  if(!co.chapters[activeChapter]) co.chapters[activeChapter] = {};
-  document.querySelectorAll('[data-field]').forEach(el=>{
-    const key = el.dataset.field;
-    if(el.type==='checkbox') co.chapters[activeChapter][key] = el.checked;
-    else co.chapters[activeChapter][key] = el.value;
-  });
-  save(db);
-}
 
 // ── MODALS ──────────────────────────────────────────────
 function showModal(id){document.getElementById('modal-'+id).style.display='flex';}
 function closeModal(id){document.getElementById('modal-'+id).style.display='none';}
 
 function addCompany(){
-  const name = document.getElementById('new-name').value.trim();
+  const name=document.getElementById('new-name').value.trim();
   if(!name){alert('請輸入公司名稱');return;}
-  const co = {
-    id: 'co_'+Date.now(),
-    name,
-    code: document.getElementById('new-code').value.trim(),
-    industry: document.getElementById('new-industry').value,
-    difficulty: document.getElementById('new-difficulty').value,
-    stage: document.getElementById('new-stage').value,
-    createdAt: new Date().toISOString(),
-    chapters: {}
-  };
+  const co={id:'co_'+Date.now(),name,
+    code:document.getElementById('new-code').value.trim(),
+    industry:document.getElementById('new-industry').value,
+    difficulty:document.getElementById('new-difficulty').value,
+    stage:document.getElementById('new-stage').value,
+    createdAt:new Date().toISOString(),chapters:{}};
   db.companies.push(co);
   save(db);
   closeModal('addCompany');
-  document.getElementById('new-name').value='';
-  document.getElementById('new-code').value='';
-  navigate('research',{companyId:co.id, chapter:'c1'});
+  ['new-name','new-code'].forEach(id=>document.getElementById(id).value='');
+  navigate('research',{companyId:co.id,chapter:'c1'});
 }
 
-function confirmDelete(id, name){
-  deleteTargetId = id;
-  document.getElementById('delete-company-name').textContent = name;
-  document.getElementById('confirm-delete-btn').onclick = ()=>deleteCompany(id);
+function confirmDelete(id,name){
+  document.getElementById('delete-company-name').textContent=name;
+  document.getElementById('confirm-delete-btn').onclick=()=>deleteCompany(id);
   showModal('deleteConfirm');
 }
-
 function deleteCompany(id){
-  db.companies = db.companies.filter(c=>c.id!==id);
-  save(db);
-  closeModal('deleteConfirm');
-  navigate('companies');
+  db.companies=db.companies.filter(c=>c.id!==id);
+  save(db);closeModal('deleteConfirm');navigate('companies');
 }
 
 // ── EXPORT ──────────────────────────────────────────────
 function exportData(){
-  const blob = new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `equity_research_backup_${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('備份已下載 ✓');
+  collectData();
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`equity_research_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();showToast('備份已下載 ✓');
 }
 
 // ── TOAST ───────────────────────────────────────────────
 function showToast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2000);
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
 }
 
 // ── INIT ────────────────────────────────────────────────
-render();
+loadFromCloud().then(data=>{db=data;render();});
 </script>
 </body>
 </html>
