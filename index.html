@@ -304,6 +304,11 @@ function closeSidebar(){
 
 // ── ROUTING ─────────────────────────────────────────────
 function navigate(page,opts={}){
+  // 自動在切換頁面或章節時存檔
+  if(currentPage==='research' && currentCompanyId){
+    collectData();
+    save(db);
+  }
   currentPage=page;
   if(opts.companyId)currentCompanyId=opts.companyId;
   if(opts.chapter)activeChapter=opts.chapter;
@@ -320,10 +325,11 @@ document.querySelectorAll('.sidebar-item').forEach(el=>el.addEventListener('clic
 }));
 
 // ── RICH TEXT EDITOR ────────────────────────────────────
-function rte(fieldId,placeholder,savedHTML=''){
+function rte(fieldId,placeholder,savedHTML='',label=''){
   const tid=`tb_${fieldId}`;
   const eid=`ed_${fieldId}`;
   return `<div class="rte-wrap">
+    ${label?`<div class="rte-label">${label}</div>`:''}
     <div class="rte-toolbar" id="${tid}">
       <button onmousedown="event.preventDefault();fmt('bold')" title="粗體 Ctrl+B"><b>B</b></button>
       <button onmousedown="event.preventDefault();fmt('italic')" title="斜體 Ctrl+I"><i>I</i></button>
@@ -628,9 +634,8 @@ function renderChapter(id,d){
 }
 
 // ── HELPERS ─────────────────────────────────────────────
-function f(id,label,d,ph=''){return rte(id,ph||label.replace(/：$/,''),d[id]||'')+'<style>#ed_'+id+'{}</style>'.replace('<style>#ed_'+id+'{}</style>','');}
-// simpler: just call rte directly with label
-function field(id,label,d,ph){return rte(id,ph||label,d[id]||'');}
+function f(id,label,d,ph=''){return rte(id,ph||label.replace(/：$/,''),d[id]||'',label);}
+function field(id,label,d,ph){return rte(id,ph||label,d[id]||'',label);}
 
 function resBox(q,d){
   return `<div class="research-box"><div class="rb-title">研究思考</div>
