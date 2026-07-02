@@ -146,23 +146,23 @@ body{font-family:var(--font);color:var(--text);background:#F0F4F8;min-height:100
 <body>
 <div id="app">
   <nav id="sidebar">
-    <div class="sidebar-header"><h1>研究手冊</h1><p>Equity Research Workbook</p></div>
+    <div class="sidebar-header"><h1>📊 研究手冊</h1><p>Equity Research Workbook</p></div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">主選單</div>
-      <div class="sidebar-item active" data-page="dashboard">總覽儀表板</div>
-      <div class="sidebar-item" data-page="companies">所有公司</div>
-      <div class="sidebar-item" data-page="progress">研究進度</div>
+      <div class="sidebar-item active" data-page="dashboard">🏠 總覽儀表板</div>
+      <div class="sidebar-item" data-page="companies">🏢 所有公司</div>
+      <div class="sidebar-item" data-page="progress">📈 研究進度</div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">依產業篩選</div>
-      <div class="sidebar-item" data-page="companies" data-filter-industry="半導體">半導體</div>
-      <div class="sidebar-item" data-page="companies" data-filter-industry="電子代工">電子代工</div>
-      <div class="sidebar-item" data-page="companies" data-filter-industry="金融">金融</div>
-      <div class="sidebar-item" data-page="companies" data-filter-industry="消費">消費</div>
-      <div class="sidebar-item" data-page="companies" data-filter-industry="電信">電信</div>
-      <div class="sidebar-item" data-page="companies" data-filter-industry="原物料">原物料</div>
-      <div class="sidebar-item" data-page="companies" data-filter-industry="航運">航運</div>
-      <div class="sidebar-item" data-page="companies" data-filter-industry="其他">其他</div>
+      <div class="sidebar-item" data-page="companies" data-filter-industry="半導體">💾 半導體</div>
+      <div class="sidebar-item" data-page="companies" data-filter-industry="電子代工">🔧 電子代工</div>
+      <div class="sidebar-item" data-page="companies" data-filter-industry="金融">🏦 金融</div>
+      <div class="sidebar-item" data-page="companies" data-filter-industry="消費">🛍 消費</div>
+      <div class="sidebar-item" data-page="companies" data-filter-industry="電信">📡 電信</div>
+      <div class="sidebar-item" data-page="companies" data-filter-industry="原物料">🏗 原物料</div>
+      <div class="sidebar-item" data-page="companies" data-filter-industry="航運">🚢 航運</div>
+      <div class="sidebar-item" data-page="companies" data-filter-industry="其他">📦 其他</div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">依階段篩選</div>
@@ -304,11 +304,6 @@ function closeSidebar(){
 
 // ── ROUTING ─────────────────────────────────────────────
 function navigate(page,opts={}){
-  // 自動在切換頁面或章節時存檔
-  if(currentPage==='research' && currentCompanyId){
-    collectData();
-    save(db);
-  }
   currentPage=page;
   if(opts.companyId)currentCompanyId=opts.companyId;
   if(opts.chapter)activeChapter=opts.chapter;
@@ -325,11 +320,10 @@ document.querySelectorAll('.sidebar-item').forEach(el=>el.addEventListener('clic
 }));
 
 // ── RICH TEXT EDITOR ────────────────────────────────────
-function rte(fieldId,placeholder,savedHTML='',label=''){
+function rte(fieldId,placeholder,savedHTML=''){
   const tid=`tb_${fieldId}`;
   const eid=`ed_${fieldId}`;
   return `<div class="rte-wrap">
-    ${label?`<div class="rte-label">${label}</div>`:''}
     <div class="rte-toolbar" id="${tid}">
       <button onmousedown="event.preventDefault();fmt('bold')" title="粗體 Ctrl+B"><b>B</b></button>
       <button onmousedown="event.preventDefault();fmt('italic')" title="斜體 Ctrl+I"><i>I</i></button>
@@ -567,7 +561,7 @@ function filterByStage(v){filterStage=v;navigate('companies');}
 
 // ── PROGRESS ────────────────────────────────────────────
 function renderProgress(){
-  if(!db.companies.length)return `<div style="padding:24px">${emptyState('尚無研究進度','先新增公司再來追蹤進度')}</div>`;
+  if(!db.companies.length)return `<div style="padding:24px">${emptyState('📈','尚無研究進度','先新增公司再來追蹤進度')}</div>`;
   const rows=db.companies.map(c=>{const p=chapterProgress(c);return `<tr>
     <td style="padding:10px 12px;font-weight:600;cursor:pointer;color:var(--blue)" onclick="navigate('research',{companyId:'${c.id}',chapter:'c1'})">${c.name}</td>
     <td style="padding:10px 12px;color:var(--dark-gray)">${c.code||'—'}</td>
@@ -634,11 +628,12 @@ function renderChapter(id,d){
 }
 
 // ── HELPERS ─────────────────────────────────────────────
-function f(id,label,d,ph=''){return rte(id,ph||label.replace(/：$/,''),d[id]||'',label);}
-function field(id,label,d,ph){return rte(id,ph||label,d[id]||'',label);}
+function f(id,label,d,ph=''){return rte(id,ph||label.replace(/：$/,''),d[id]||'')+'<style>#ed_'+id+'{}</style>'.replace('<style>#ed_'+id+'{}</style>','');}
+// simpler: just call rte directly with label
+function field(id,label,d,ph){return rte(id,ph||label,d[id]||'');}
 
 function resBox(q,d){
-  return `<div class="research-box"><div class="rb-title">研究思考</div>
+  return `<div class="research-box"><div class="rb-title">🔍 研究思考</div>
     ${field('rq','研究問題：'+q,d)}
     ${field('hypo','假說（Hypothesis）：',d,'寫下你的假設…')}
     ${field('support','支持證據 ①②③',d,'列出支持你假說的證據…')}
